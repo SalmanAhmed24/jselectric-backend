@@ -12,14 +12,16 @@ const userSchema = new mongoose.Schema({
   companyPhone: { type: String },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  AISD: { type: Boolean },
-  AISDExpDate: { type: String },
-  COAWaterDep: { type: Boolean },
-  COAWaterDepExpDate: { type: String },
-  TFC: { type: Boolean },
-  TFCExpDate: { type: String },
-  ABIA: { type: Boolean },
-  ABIAExpDate: { type: String },
+  badges: {
+    AISD: { type: Boolean },
+    AISDExpDate: { type: String },
+    COAWaterDep: { type: Boolean },
+    COAWaterDepExpDate: { type: String },
+    TFC: { type: Boolean },
+    TFCExpDate: { type: String },
+    ABIA: { type: Boolean },
+    ABIAExpDate: { type: String },
+  },
 });
 userSchema.plugin(validator);
 module.exports = mongoose.model("users", userSchema);

@@ -12,14 +12,6 @@ const addUser = async (req, res, next) => {
     companyPhone,
     username,
     password,
-    AISD,
-    AISDExpDate,
-    COAWaterDep,
-    COAWaterDepExpDate,
-    TFC,
-    TFCExpDate,
-    ABIA,
-    ABIAExpDate,
   } = req.body;
   const createUserModel = new userModel({
     userType,
@@ -33,14 +25,6 @@ const addUser = async (req, res, next) => {
     companyPhone,
     username,
     password,
-    AISD,
-    AISDExpDate,
-    COAWaterDep,
-    COAWaterDepExpDate,
-    TFC,
-    TFCExpDate,
-    ABIA,
-    ABIAExpDate,
   });
   try {
     await createUserModel.save();
