@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const usersRoutes = require("./routes/users");
+const usersTypeRoutes = require("./routes/userType");
 
 const url =
   "mongodb+srv://book-a-tutorDB:reactive_007@cluster0.2art5.mongodb.net/jselectric";
@@ -21,6 +22,7 @@ mongoose
   });
 
 app.use("/api/users", usersRoutes);
+app.use("/api/userType", usersTypeRoutes);
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
