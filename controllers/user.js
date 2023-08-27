@@ -25,6 +25,7 @@ const addUser = async (req, res, next) => {
     companyPhone,
     username,
     password,
+    badges: {},
   });
   try {
     await createUserModel.save();
@@ -60,14 +61,6 @@ const editUser = async (req, res, next) => {
     companyPhone,
     username,
     password,
-    AISD,
-    AISDExpDate,
-    COAWaterDep,
-    COAWaterDepExpDate,
-    TFC,
-    TFCExpDate,
-    ABIA,
-    ABIAExpDate,
   } = req.body;
   const { userId } = req.params;
   let userToBeEdited;
@@ -87,14 +80,7 @@ const editUser = async (req, res, next) => {
   userToBeEdited.companyPhone = companyPhone;
   userToBeEdited.username = username;
   userToBeEdited.password = password;
-  userToBeEdited.AISD = AISD;
-  userToBeEdited.AISDExpDate = AISDExpDate;
-  userToBeEdited.COAWaterDep = COAWaterDep;
-  userToBeEdited.COAWaterDepExpDate = COAWaterDepExpDate;
-  userToBeEdited.TFC = TFC;
-  userToBeEdited.TFCExpDate = TFCExpDate;
-  userToBeEdited.ABIA = ABIA;
-  userToBeEdited.ABIAExpDate = ABIAExpDate;
+  userToBeEdited.userType = userType;
   try {
     await userToBeEdited.save();
   } catch (error) {
@@ -144,8 +130,80 @@ const loginUser = async (req, res, next) => {
     });
   }
 };
+const addBadges = async (req, res, next) => {
+  const { userId } = req.params;
+  const {
+    AISD,
+    AISDExpDate,
+    COAWaterDep,
+    COAWaterDepExpDate,
+    TFC,
+    TFCExpDate,
+    ABIA,
+    ABIAExpDate,
+  } = req.body;
+  let userToBeEdited;
+  try {
+    userToBeEdited = await userModel.findById(userId);
+  } catch (error) {
+    res.json({ message: "Could not find the unit", error: true });
+    return next(error);
+  }
+  userToBeEdited.badges.AISD = AISD;
+  userToBeEdited.badges.AISDExpDate = AISDExpDate;
+  userToBeEdited.badges.COAWaterDep = COAWaterDep;
+  userToBeEdited.badges.COAWaterDepExpDate = COAWaterDepExpDate;
+  userToBeEdited.badges.TFC = TFC;
+  userToBeEdited.badges.TFCExpDate = TFCExpDate;
+  userToBeEdited.badges.ABIA = ABIA;
+  userToBeEdited.badges.ABIAExpDate = ABIAExpDate;
+  try {
+    await userToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit user", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
+const editBadges = async (req, res, next) => {
+  const { userId } = req.params;
+  const {
+    AISD,
+    AISDExpDate,
+    COAWaterDep,
+    COAWaterDepExpDate,
+    TFC,
+    TFCExpDate,
+    ABIA,
+    ABIAExpDate,
+  } = req.body;
+  let userToBeEdited;
+  try {
+    userToBeEdited = await userModel.findById(userId);
+  } catch (error) {
+    res.json({ message: "Could not find the unit", error: true });
+    return next(error);
+  }
+  userToBeEdited.badges.AISD = AISD;
+  userToBeEdited.badges.AISDExpDate = AISDExpDate;
+  userToBeEdited.badges.COAWaterDep = COAWaterDep;
+  userToBeEdited.badges.COAWaterDepExpDate = COAWaterDepExpDate;
+  userToBeEdited.badges.TFC = TFC;
+  userToBeEdited.badges.TFCExpDate = TFCExpDate;
+  userToBeEdited.badges.ABIA = ABIA;
+  userToBeEdited.badges.ABIAExpDate = ABIAExpDate;
+  try {
+    await userToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit user", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
 exports.addUser = addUser;
 exports.getUsers = getUsers;
 exports.editUser = editUser;
 exports.deleteUser = deleteUser;
 exports.loginUser = loginUser;
+exports.addBadges = addBadges;
+exports.editBadges = editBadges;
