@@ -25,7 +25,7 @@ const addUser = async (req, res, next) => {
     companyPhone,
     username,
     password,
-    badges: {},
+    badges: [],
   });
   try {
     await createUserModel.save();
