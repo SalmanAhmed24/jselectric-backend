@@ -13,13 +13,13 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   badges: {
-    AISD: { type: Boolean },
+    AISD: { type: String },
     AISDExpDate: { type: String },
-    COAWaterDep: { type: Boolean },
+    COAWaterDep: { type: String },
     COAWaterDepExpDate: { type: String },
-    TFC: { type: Boolean },
+    TFC: { type: String },
     TFCExpDate: { type: String },
-    ABIA: { type: Boolean },
+    ABIA: { type: String },
     ABIAExpDate: { type: String },
   },
 });
