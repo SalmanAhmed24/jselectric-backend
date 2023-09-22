@@ -10,6 +10,10 @@ app.use(cors());
 const usersRoutes = require("./routes/users");
 const usersTypeRoutes = require("./routes/userType");
 const positionRoutes = require("./routes/position");
+const toolsRoutes = require("./routes/tools");
+const toolsCategoryRoutes = require("./routes/toolCategory");
+const subtoolsCategoryRoutes = require("./routes/subtoolCategory");
+
 const url =
   "mongodb+srv://book-a-tutorDB:reactive_007@cluster0.2art5.mongodb.net/jselectric";
 mongoose
@@ -24,6 +28,9 @@ mongoose
 app.use("/api/users", usersRoutes);
 app.use("/api/userType", usersTypeRoutes);
 app.use("/api/position", positionRoutes);
+app.use("/api/tools", toolsRoutes);
+app.use("/api/toolCategory", toolsCategoryRoutes);
+app.use("/api/subtoolCategory", subtoolsCategoryRoutes);
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
