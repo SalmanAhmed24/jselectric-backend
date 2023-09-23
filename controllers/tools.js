@@ -66,38 +66,55 @@ const delTools = async (req, res, next) => {
 };
 const addInfo = async (req, res, next) => {
   const { toolId } = req.params;
-  const { subCategory, Employee, Project, lastPurchasePrice } = req.body;
-  const { image } = req.files;
-  console.log("this is file", image);
-  // let userToBeEdited;
-  // try {
-  //   userToBeEdited = await userModel.findById(userId);
-  // } catch (error) {
-  //   res.json({ message: "Could not find the unit", error: true });
-  //   return next(error);
-  // }
-  // userToBeEdited.badges.AISD = AISD;
-  // userToBeEdited.badges.AISDExpDate = AISDExpDate;
-  // userToBeEdited.badges.COAWaterDep = COAWaterDep;
-  // userToBeEdited.badges.COAWaterDepExpDate = COAWaterDepExpDate;
-  // userToBeEdited.badges.TFC = TFC;
-  // userToBeEdited.badges.TFCExpDate = TFCExpDate;
-  // userToBeEdited.badges.ABIA = ABIA;
-  // userToBeEdited.badges.ABIAExpDate = ABIAExpDate;
-  // try {
-  //   await userToBeEdited.save();
-  // } catch (error) {
-  //   res.json({ message: "Enable to edit user", error: true });
-  //   return next(error);
-  // }
-  // res.status(201).json({ message: "Edited successfully", error: false });
+  const { subCategory, employee, project, lastPurchasePrice, picture } =
+    req.body;
+  let toolsToBeEdited;
+  try {
+    toolsToBeEdited = await toolsModel.findById(toolId);
+  } catch (error) {
+    res.json({ message: "Could not find the tool", error: true });
+    return next(error);
+  }
+  toolsToBeEdited.info.subCategory = subCategory;
+  toolsToBeEdited.info.employee = employee;
+  toolsToBeEdited.info.project = project;
+  toolsToBeEdited.info.lastPurchasePrice = lastPurchasePrice;
+  toolsToBeEdited.info.picture = picture;
+  try {
+    await toolsToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit tools", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
 };
-const editInfo = async (req, res, next) => {};
-const delInfo = async (req, res, next) => {};
+const editInfo = async (req, res, next) => {
+  const { toolId } = req.params;
+  const { subCategory, employee, project, lastPurchasePrice, picture } =
+    req.body;
+  let toolsToBeEdited;
+  try {
+    toolsToBeEdited = await toolsModel.findById(toolId);
+  } catch (error) {
+    res.json({ message: "Could not find the tool", error: true });
+    return next(error);
+  }
+  toolsToBeEdited.info.subCategory = subCategory;
+  toolsToBeEdited.info.employee = employee;
+  toolsToBeEdited.info.project = project;
+  toolsToBeEdited.info.lastPurchasePrice = lastPurchasePrice;
+  toolsToBeEdited.info.picture = picture;
+  try {
+    await toolsToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit tools", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
 exports.addTools = addTools;
 exports.editTools = editTools;
 exports.delTools = delTools;
 exports.getTools = getTools;
 exports.addInfo = addInfo;
 exports.editInfo = editInfo;
-exports.delInfo = delInfo;
