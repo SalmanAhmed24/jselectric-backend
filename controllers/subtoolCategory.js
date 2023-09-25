@@ -3,7 +3,7 @@ const addsubtoolCategory = async (req, res, next) => {
   const { name, shortCode } = req.body;
   const createsubtoolCategoryModel = new subtoolCategoryModel({
     name,
-    shortCode,
+    parentCategory,
   });
   try {
     await createsubtoolCategoryModel.save();
@@ -29,7 +29,7 @@ const getsubtoolCategory = async (req, res, next) => {
   });
 };
 const editsubtoolCategory = async (req, res, next) => {
-  const { name, shortCode } = req.body;
+  const { name, parentCategory } = req.body;
   const { subtoolCategoryId } = req.params;
   let userToBeEdited;
   try {
@@ -39,7 +39,7 @@ const editsubtoolCategory = async (req, res, next) => {
     return next(error);
   }
   userToBeEdited.name = name;
-  userToBeEdited.shortCode = shortCode;
+  userToBeEdited.parentCategory = parentCategory;
   try {
     await userToBeEdited.save();
   } catch (error) {

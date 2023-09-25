@@ -68,6 +68,7 @@ const addInfo = async (req, res, next) => {
   const { toolId } = req.params;
   const { subCategory, employee, project, lastPurchasePrice, picture } =
     req.body;
+  npm;
   let toolsToBeEdited;
   try {
     toolsToBeEdited = await toolsModel.findById(toolId);
