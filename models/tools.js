@@ -5,13 +5,13 @@ const toolsSchema = new mongoose.Schema({
   description: { type: String },
   techAssigned: { type: String },
   location: { type: String },
-  info: {
-    subCategory: { type: String },
-    employee: { type: String },
-    project: { type: String },
-    lastPurchasePrice: { type: String },
-    picture: { type: String },
-  },
+  subCategory: { type: String },
+  employee: { type: String },
+  project: { type: String },
+  lastPurchasePrice: { type: String },
+  picture: { type: String },
+  serial: { type: String },
+  toolNumber: { type: String },
   parts: [
     {
       partName: { type: String },
