@@ -1,6 +1,6 @@
 const subtoolCategoryModel = require("../models/subtoolCategoryModel");
 const addsubtoolCategory = async (req, res, next) => {
-  const { name, shortCode } = req.body;
+  const { name, parentCategory } = req.body;
   const createsubtoolCategoryModel = new subtoolCategoryModel({
     name,
     parentCategory,
