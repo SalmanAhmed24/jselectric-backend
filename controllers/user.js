@@ -163,7 +163,13 @@ const addBadges = async (req, res, next) => {
     res.json({ message: "Enable to edit user", error: true });
     return next(error);
   }
-  res.status(201).json({ message: "Edited successfully", error: false });
+  res
+    .status(201)
+    .json({
+      message: "Edited successfully",
+      error: false,
+      userInd: userToBeEdited,
+    });
 };
 const editBadges = async (req, res, next) => {
   const { userId } = req.params;
@@ -198,7 +204,13 @@ const editBadges = async (req, res, next) => {
     res.json({ message: "Enable to edit user", error: true });
     return next(error);
   }
-  res.status(201).json({ message: "Edited successfully", error: false });
+  res
+    .status(201)
+    .json({
+      message: "Edited successfully",
+      error: false,
+      userInd: userToBeEdited,
+    });
 };
 exports.addUser = addUser;
 exports.getUsers = getUsers;

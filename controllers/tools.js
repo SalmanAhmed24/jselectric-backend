@@ -76,13 +76,7 @@ const editTools = async (req, res, next) => {
     res.json({ message: "Enable to edit tools", error: true });
     return next(error);
   }
-  res
-    .status(201)
-    .json({
-      message: "Edited successfully",
-      error: false,
-      toolData: toolsToBeEdited,
-    });
+  res.status(201).json({ message: "Edited successfully", error: false });
 };
 const getTools = async (req, res, next) => {
   let alltools;
