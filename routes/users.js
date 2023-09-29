@@ -12,5 +12,8 @@ router.patch("/:userId", userCon.editUser);
 router.delete("/:userId", userCon.deleteUser);
 router.patch("/addBadges/:userId", userCon.addBadges);
 router.patch("/editBadges/:userId", userCon.editBadges);
+router.patch("/addNotes/:userId", userCon.addNotes);
+router.patch("/editNotes/:userId", userCon.editNotes);
+router.delete("/delNotes/:userId&&:noteId", userCon.delNotes);
 router.post("/login", userCon.loginUser);
 module.exports = router;

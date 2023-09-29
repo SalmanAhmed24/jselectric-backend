@@ -163,13 +163,11 @@ const addBadges = async (req, res, next) => {
     res.json({ message: "Enable to edit user", error: true });
     return next(error);
   }
-  res
-    .status(201)
-    .json({
-      message: "Edited successfully",
-      error: false,
-      userInd: userToBeEdited,
-    });
+  res.status(201).json({
+    message: "Edited successfully",
+    error: false,
+    userInd: userToBeEdited,
+  });
 };
 const editBadges = async (req, res, next) => {
   const { userId } = req.params;
@@ -204,13 +202,73 @@ const editBadges = async (req, res, next) => {
     res.json({ message: "Enable to edit user", error: true });
     return next(error);
   }
-  res
-    .status(201)
-    .json({
-      message: "Edited successfully",
-      error: false,
-      userInd: userToBeEdited,
-    });
+  res.status(201).json({
+    message: "Edited successfully",
+    error: false,
+    userInd: userToBeEdited,
+  });
+};
+const addNotes = async (req, res, next) => {
+  const { date, time, note, user } = req.body;
+  const { userId } = req.params;
+  try {
+    await userModel.updateOne(
+      { _id: userId },
+      {
+        $push: {
+          notes: { note: note, date: date, time: time, user: user },
+        },
+      }
+    );
+  } catch (error) {
+    res.json({ message: "Could not find the user", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
+const editNotes = async (req, res, next) => {
+  const { userId } = req.params;
+  const { note, date, time, user, id } = req.body;
+  let userToBeEdited;
+  try {
+    userToBeEdited = await userModel.findById(userId);
+  } catch (error) {
+    res.json({ message: "Could not find the user", error: true });
+    return next(error);
+  }
+  userToBeEdited.notes.forEach((i) => {
+    if (i._id == id) {
+      i.note = note;
+      i.date = date;
+      i.time = time;
+      i.user = user;
+    }
+  });
+  try {
+    await userToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit notes", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
+const delNotes = async (req, res, next) => {
+  const { userId, noteId } = req.params;
+  console.log("this is ind id", noteId);
+  try {
+    await userModel.updateOne(
+      { _id: userId },
+      {
+        $pull: {
+          notes: { _id: noteId },
+        },
+      }
+    );
+  } catch (error) {
+    res.json({ message: "Could not find the user note", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
 };
 exports.addUser = addUser;
 exports.getUsers = getUsers;
@@ -219,3 +277,6 @@ exports.deleteUser = deleteUser;
 exports.loginUser = loginUser;
 exports.addBadges = addBadges;
 exports.editBadges = editBadges;
+exports.addNotes = addNotes;
+exports.editNotes = editNotes;
+exports.delNotes = delNotes;

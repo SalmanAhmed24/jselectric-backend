@@ -22,6 +22,14 @@ const userSchema = new mongoose.Schema({
     ABIA: { type: String },
     ABIAExpDate: { type: String },
   },
+  notes: [
+    {
+      date: { type: String },
+      time: { type: String },
+      user: { type: String },
+      note: { type: String },
+    },
+  ],
 });
 userSchema.plugin(validator);
 module.exports = mongoose.model("users", userSchema);
