@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 app.use(bodyParser.json({ limit: "50MB" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50MB" }));
-// var multer = require("multer");
+var multer = require("multer");
 
 const router = express.Router();
 // user controllers
