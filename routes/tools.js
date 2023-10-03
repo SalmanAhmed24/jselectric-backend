@@ -1,10 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 var multer = require("multer");
+const cors = require("cors");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+
 const router = express.Router();
 router.use(multer({ limits: { fieldSize: 25 * 1024 * 1024 } }).any());
 

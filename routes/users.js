@@ -1,7 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 let fileupload = require("express-fileupload");
+const cors = require("cors");
+
 const app = express();
+app.use(cors());
+
 app.use(bodyParser.json({ limit: "50MB" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50MB" }));
 var multer = require("multer");
