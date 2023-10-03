@@ -12,6 +12,8 @@ const usersTypeRoutes = require("./routes/userType");
 const positionRoutes = require("./routes/position");
 const toolsRoutes = require("./routes/tools");
 const toolsCategoryRoutes = require("./routes/toolCategory");
+const deviceCategoryRoutes = require("./routes/deviceCategory");
+
 const subtoolsCategoryRoutes = require("./routes/subtoolCategory");
 
 const url =
@@ -30,6 +32,8 @@ app.use("/api/userType", usersTypeRoutes);
 app.use("/api/position", positionRoutes);
 app.use("/api/tools", toolsRoutes);
 app.use("/api/toolCategory", toolsCategoryRoutes);
+app.use("/api/deviceCategory", deviceCategoryRoutes);
+
 app.use("/api/subtoolCategory", subtoolsCategoryRoutes);
 
 const PORT = process.env.PORT || 9000;

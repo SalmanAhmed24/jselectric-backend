@@ -270,6 +270,14 @@ const delNotes = async (req, res, next) => {
   }
   res.status(201).json({ message: "Edited successfully", error: false });
 };
+const addFiles = async (req, res, next) => {
+  const { date, time, user, note } = req.body;
+  const { userId } = req.params;
+  console.log("####", date, time, user, userId, note);
+  console.log("@@@", req.files);
+};
+const editFiles = async (req, res, next) => {};
+const delFiles = async (req, res, next) => {};
 exports.addUser = addUser;
 exports.getUsers = getUsers;
 exports.editUser = editUser;
@@ -280,3 +288,4 @@ exports.editBadges = editBadges;
 exports.addNotes = addNotes;
 exports.editNotes = editNotes;
 exports.delNotes = delNotes;
+exports.addFiles = addFiles;

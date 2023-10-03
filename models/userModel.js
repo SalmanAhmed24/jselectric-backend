@@ -30,6 +30,15 @@ const userSchema = new mongoose.Schema({
       note: { type: String },
     },
   ],
+  attachments: [
+    {
+      files: [{ file: { type: String }, fileType: { type: String } }],
+      user: { type: String },
+      date: { type: String },
+      time: { type: String },
+      note: { type: String },
+    },
+  ],
 });
 userSchema.plugin(validator);
 module.exports = mongoose.model("users", userSchema);
