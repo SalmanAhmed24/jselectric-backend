@@ -1,17 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
-
 const app = express();
-app.use(cors());
-
 app.use(bodyParser.json({ limit: "50MB" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50MB" }));
-var multer = require("multer");
+// var multer = require("multer");
 
 const router = express.Router();
 // user controllers
-router.use(multer({ dest: "./uploads" }).array("files", 1));
+router.use(multer().any());
 const userCon = require("../controllers/user.js");
 router.get("/", userCon.getUsers);
 router.post("/addUser", userCon.addUser);
