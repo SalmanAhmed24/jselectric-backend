@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-let fileupload = require("express-fileupload");
 const cors = require("cors");
 
 const app = express();
@@ -13,7 +12,6 @@ var multer = require("multer");
 const router = express.Router();
 // user controllers
 router.use(multer({ dest: "./uploads" }).array("files", 1));
-// router.use(fileupload());
 const userCon = require("../controllers/user.js");
 router.get("/", userCon.getUsers);
 router.post("/addUser", userCon.addUser);
