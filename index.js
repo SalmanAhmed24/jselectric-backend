@@ -11,7 +11,7 @@ const usersRoutes = require("./routes/users");
 const usersTypeRoutes = require("./routes/userType");
 const positionRoutes = require("./routes/position");
 const deviceRoutes = require("./routes/devices");
-
+const vehicleRoutes = require("./routes/vehicle");
 const toolsRoutes = require("./routes/tools");
 const toolsCategoryRoutes = require("./routes/toolCategory");
 const deviceCategoryRoutes = require("./routes/deviceCategory");
@@ -33,7 +33,7 @@ app.use("/api/users", usersRoutes);
 app.use("/api/userType", usersTypeRoutes);
 app.use("/api/position", positionRoutes);
 app.use("/api/devices", deviceRoutes);
-
+app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/tools", toolsRoutes);
 app.use("/api/toolCategory", toolsCategoryRoutes);
 app.use("/api/deviceCategory", deviceCategoryRoutes);
