@@ -73,6 +73,7 @@ const editUser = async (req, res, next) => {
     res.json({ message: "Could not find the user", error: true });
     return next(error);
   }
+  console.log(creditCard);
   userToBeEdited.position = position;
   userToBeEdited.vehicle = vehicle;
   userToBeEdited.tablet = tablet;
