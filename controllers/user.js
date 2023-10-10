@@ -4,6 +4,7 @@ const addUser = async (req, res, next) => {
     userType,
     position,
     vehicle,
+    creditCard,
     tablet,
     city,
     fullname,
@@ -21,6 +22,7 @@ const addUser = async (req, res, next) => {
     city,
     fullname,
     email,
+    creditCard,
     personalPhone,
     companyPhone,
     username,
@@ -54,6 +56,7 @@ const editUser = async (req, res, next) => {
     position,
     vehicle,
     tablet,
+    creditCard,
     city,
     fullname,
     email,
@@ -81,6 +84,7 @@ const editUser = async (req, res, next) => {
   userToBeEdited.username = username;
   userToBeEdited.password = password;
   userToBeEdited.userType = userType;
+  userToBeEdited.creditCard = creditCard;
   try {
     await userToBeEdited.save();
   } catch (error) {

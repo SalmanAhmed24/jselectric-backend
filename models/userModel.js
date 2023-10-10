@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   companyPhone: { type: String },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  creditCard: { type: String },
   badges: {
     AISD: { type: String },
     AISDExpDate: { type: String },
