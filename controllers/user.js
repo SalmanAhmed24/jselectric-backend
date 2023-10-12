@@ -339,6 +339,7 @@ const editFiles = async (req, res, next) => {
 };
 const delFiles = async (req, res, next) => {
   const { userId, attachmentId } = req.params;
+  console.log("attac", attachmentId);
   try {
     await userModel.updateOne(
       { _id: userId },
