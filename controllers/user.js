@@ -1,4 +1,6 @@
 const userModel = require("../models/userModel");
+const fs = require("fs");
+
 const addUser = async (req, res, next) => {
   const {
     userType,
@@ -278,11 +280,80 @@ const delNotes = async (req, res, next) => {
 const addFiles = async (req, res, next) => {
   const { date, time, user, note } = req.body;
   const { userId } = req.params;
-  console.log("####", date, time, user, userId, note);
-  console.log("@@@", req.files);
+  const files = req.files;
+  const base64Arr = files.map((i) => {
+    return { file: i.buffer.toString("base64"), fileType: i.mimetype };
+  });
+
+  try {
+    await userModel.updateOne(
+      { _id: userId },
+      {
+        $push: {
+          attachments: {
+            note: note,
+            date: date,
+            time: time,
+            user: user,
+            files: base64Arr,
+          },
+        },
+      }
+    );
+  } catch (error) {
+    res.json({ message: "Could not find the user", error: true });
+    return next(error);
+  }
 };
-const editFiles = async (req, res, next) => {};
-const delFiles = async (req, res, next) => {};
+
+const editFiles = async (req, res, next) => {
+  const { userId } = req.params;
+  const { note, date, time, user, id } = req.body;
+  const files = req.files;
+  const base64Arr = files.map((i) => {
+    return { file: i.buffer.toString("base64"), fileType: i.mimetype };
+  });
+  let userToBeEdited;
+  try {
+    userToBeEdited = await userModel.findById(userId);
+  } catch (error) {
+    res.json({ message: "Could not find the user", error: true });
+    return next(error);
+  }
+  userToBeEdited.attachments.forEach((i) => {
+    if (i._id == id) {
+      i.note = note;
+      i.date = date;
+      i.time = time;
+      i.user = user;
+      i.files = base64Arr;
+    }
+  });
+  try {
+    await userToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit notes", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
+const delFiles = async (req, res, next) => {
+  const { userId, attachmentId } = req.params;
+  try {
+    await userModel.updateOne(
+      { _id: userId },
+      {
+        $pull: {
+          notes: { _id: attachmentId },
+        },
+      }
+    );
+  } catch (error) {
+    res.json({ message: "Could not find the user note", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Deleted successfully", error: false });
+};
 exports.addUser = addUser;
 exports.getUsers = getUsers;
 exports.editUser = editUser;
@@ -294,3 +365,5 @@ exports.addNotes = addNotes;
 exports.editNotes = editNotes;
 exports.delNotes = delNotes;
 exports.addFiles = addFiles;
+exports.editFiles = editFiles;
+exports.delFiles = delFiles;
