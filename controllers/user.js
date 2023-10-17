@@ -1,6 +1,16 @@
 const userModel = require("../models/userModel");
 const fs = require("fs");
-
+const { uploadFile, getFile } = require("../s3");
+const aws = require("aws-sdk");
+const dotenv = require("dotenv");
+const momentObj = require("moment");
+dotenv.config();
+const s3 = new aws.S3({
+  accessKeyId: `${process.env.AWS_ACCESS_KEY}`,
+  secretAccessKey: `${process.env.AWS_SECRET_KEY}`,
+  region: `${process.env.AWS_BUCKET_REGION}`,
+  Bucket: `${process.env.AWS_BUCKET_NAME}`,
+});
 const addUser = async (req, res, next) => {
   const {
     userType,
@@ -281,11 +291,18 @@ const addFiles = async (req, res, next) => {
   const { date, time, user, note } = req.body;
   const { userId } = req.params;
   const files = req.files;
-  const base64Arr = files.map((i) => {
-    return { file: i.buffer.toString("base64"), fileType: i.mimetype };
-  });
-
+  var arr = [];
   try {
+    let i = 0;
+    let userToBeEdited;
+    while (i < files.length) {
+      await uploadToS3(files[i])
+        .then((res) => {
+          arrReturn(res, arr);
+        })
+        .catch((err) => console.log(err));
+      i++;
+    }
     await userModel.updateOne(
       { _id: userId },
       {
@@ -295,57 +312,129 @@ const addFiles = async (req, res, next) => {
             date: date,
             time: time,
             user: user,
-            files: base64Arr,
+            files: arr,
           },
         },
       }
     );
   } catch (error) {
-    res.json({ message: "Could not find the user", error: true });
-    return next(error);
-  }
-};
-
-const editFiles = async (req, res, next) => {
-  const { userId } = req.params;
-  const { note, date, time, user, id } = req.body;
-  const files = req.files;
-  const base64Arr = files.map((i) => {
-    return { file: i.buffer.toString("base64"), fileType: i.mimetype };
-  });
-  let userToBeEdited;
-  try {
-    userToBeEdited = await userModel.findById(userId);
-  } catch (error) {
-    res.json({ message: "Could not find the user", error: true });
-    return next(error);
-  }
-  userToBeEdited.attachments.forEach((i) => {
-    if (i._id == id) {
-      i.note = note;
-      i.date = date;
-      i.time = time;
-      i.user = user;
-      i.files = base64Arr;
-    }
-  });
-  try {
-    await userToBeEdited.save();
-  } catch (error) {
-    res.json({ message: "Enable to edit notes", error: true });
+    res.json({ message: "Could not find the user note", error: true });
     return next(error);
   }
   res.status(201).json({ message: "Edited successfully", error: false });
 };
+const arrReturn = (item, arr) => {
+  arr.push(item);
+};
+const editFiles = async (req, res, next) => {
+  const { userId } = req.params;
+  const { note, date, time, user, id, newFileFlag, editFlag, oldFiles } =
+    req.body;
+  const files = req.files;
+  let userToBeEdited;
+  if (newFileFlag === "true") {
+    console.log("here in true");
+    const prevFileArr = JSON.parse(oldFiles);
+    try {
+      prevFileArr.forEach((item) => {
+        deleteAwsObj(item);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    var arr = [];
+    try {
+      let i = 0;
+      while (i < files.length) {
+        await uploadToS3(files[i])
+          .then((res) => {
+            arrReturn(res, arr);
+          })
+          .catch((err) => console.log(err));
+        i++;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      userToBeEdited = await userModel.findById(userId);
+    } catch (error) {
+      res.json({ message: "Could not find the attachments", error: true });
+      return next(error);
+    }
+    userToBeEdited.attachments.forEach((i) => {
+      if (i._id.toString() == id) {
+        i.note = note;
+        i.date = date;
+        i.time = time;
+        i.user = user;
+        i.files = arr;
+      }
+    });
+    try {
+      await userToBeEdited.save();
+    } catch (error) {
+      res.json({ message: "Enable to edit notes", error: true });
+      return next(error);
+    }
+    res.status(201).json({ message: "Edited successfully", error: false });
+  } else {
+    const prevFileArr = JSON.parse(oldFiles);
+    console.log("@@@$$$ here", prevFileArr, newFileFlag);
+    try {
+      userToBeEdited = await userModel.findById(userId);
+    } catch (error) {
+      res.json({ message: "Could not find the attachments", error: true });
+      return next(error);
+    }
+    userToBeEdited.attachments.forEach((i) => {
+      if (i._id.toString() == id) {
+        i.note = note;
+        i.date = date;
+        i.time = time;
+        i.user = user;
+        i.files = prevFileArr;
+      }
+    });
+    try {
+      await userToBeEdited.save();
+    } catch (error) {
+      res.json({ message: "Enable to edit notes", error: true });
+      return next(error);
+    }
+    res.status(201).json({ message: "Edited successfully", error: false });
+  }
+};
+const deleteAwsObj = async (obj) => {
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: obj.filename,
+    };
+    s3.deleteObject(params, (err, data) => {
+      if (err) {
+        console.log(err), reject(err);
+      }
+      return resolve(data);
+    });
+  });
+};
 const delFiles = async (req, res, next) => {
   const { userId, attachmentId } = req.params;
-  console.log("attac", attachmentId);
+  const { oldFiles } = req.body;
+  try {
+    oldFiles.forEach((item) => {
+      deleteAwsObj(item);
+    });
+  } catch (error) {
+    console.log(error);
+  }
   try {
     await userModel.updateOne(
       { _id: userId },
       {
         $pull: {
-          notes: { _id: attachmentId },
+          attachments: { _id: attachmentId },
         },
       }
     );
@@ -355,6 +444,28 @@ const delFiles = async (req, res, next) => {
   }
   res.status(201).json({ message: "Deleted successfully", error: false });
 };
+
+const uploadToS3 = (file) => {
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: `${process.env.AWS_BUCKET_NAME}`,
+      Key: `${momentObj().format("hh:mm:ss")}-${file.originalname}`,
+      Body: file.buffer,
+    };
+
+    s3.upload(params, (err, data) => {
+      if (err) {
+        console.log(err), reject(err);
+      }
+      const dataObj = {
+        fileUrl: data.Location,
+        filename: data.Key,
+      };
+      return resolve(dataObj);
+    });
+  });
+};
+
 exports.addUser = addUser;
 exports.getUsers = getUsers;
 exports.editUser = editUser;

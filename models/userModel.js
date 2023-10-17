@@ -33,7 +33,12 @@ const userSchema = new mongoose.Schema({
   ],
   attachments: [
     {
-      files: [{ file: { type: String }, fileType: { type: String } }],
+      files: [
+        {
+          fileUrl: { type: String },
+          filename: { type: String },
+        },
+      ],
       user: { type: String },
       date: { type: String },
       time: { type: String },
