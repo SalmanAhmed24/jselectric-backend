@@ -10,8 +10,8 @@ app.use(cors());
 const aws = require("aws-sdk");
 const multerS3 = require("multer-s3");
 const s3 = new aws.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_KEY,
+  accessKeyId: process.env.ACCESS_KEY,
+  secretAccessKey: process.env.SECRET_KEY,
   region: process.env.AWS_BUCKET_REGION,
 });
 const multer = require("multer");
