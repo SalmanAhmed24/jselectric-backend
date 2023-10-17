@@ -2,9 +2,11 @@ const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const app = express();
 app.use(bodyParser.json({ limit: "250MB" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "250MB" }));
+app.use(cors());
 const aws = require("aws-sdk");
 const multerS3 = require("multer-s3");
 const s3 = new aws.S3({
