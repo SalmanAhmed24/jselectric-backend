@@ -6,8 +6,8 @@ const dotenv = require("dotenv");
 const momentObj = require("moment");
 dotenv.config();
 const s3 = new aws.S3({
-  accessKeyId: `${process.env.ACCESS_KEY}`,
-  secretAccessKey: `${process.env.SECRET_KEY}`,
+  accessKeyId: `${process.env.ACCESS_KEY_AWS}`,
+  secretAccessKey: `${process.env.SECRET_KEY_AWS}`,
   region: `${process.env.AWS_BUCKET_REGION}`,
   Bucket: `${process.env.AWS_BUCKET_NAME}`,
 });
@@ -334,6 +334,7 @@ const editFiles = async (req, res, next) => {
   let userToBeEdited;
   if (newFileFlag === "true") {
     console.log("here in true");
+    var arr = [];
     const prevFileArr = JSON.parse(oldFiles);
     try {
       prevFileArr.forEach((item) => {
@@ -342,7 +343,6 @@ const editFiles = async (req, res, next) => {
     } catch (error) {
       console.log(error);
     }
-    var arr = [];
     try {
       let i = 0;
       while (i < files.length) {
@@ -362,6 +362,7 @@ const editFiles = async (req, res, next) => {
       res.json({ message: "Could not find the attachments", error: true });
       return next(error);
     }
+    console.log("*****", arr);
     userToBeEdited.attachments.forEach((i) => {
       if (i._id.toString() == id) {
         i.note = note;
@@ -406,6 +407,8 @@ const editFiles = async (req, res, next) => {
   }
 };
 const deleteAwsObj = async (obj) => {
+  console.log("here in deleAWs", obj);
+
   return new Promise((resolve, reject) => {
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
@@ -413,7 +416,7 @@ const deleteAwsObj = async (obj) => {
     };
     s3.deleteObject(params, (err, data) => {
       if (err) {
-        console.log(err), reject(err);
+        console.log("@@@@@!!!!!", err), reject(err);
       }
       return resolve(data);
     });
@@ -428,6 +431,8 @@ const delFiles = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
+    res.json({ message: "Could not find the user note", error: true });
+    return next(error);
   }
   try {
     await userModel.updateOne(
@@ -446,16 +451,18 @@ const delFiles = async (req, res, next) => {
 };
 
 const uploadToS3 = (file) => {
+  console.log("here in uploadS3", file);
+
   return new Promise((resolve, reject) => {
     const params = {
-      Bucket: `${process.env.AWS_BUCKET_NAME}`,
+      Bucket: `js-electric-app`,
       Key: `${momentObj().format("hh:mm:ss")}-${file.originalname}`,
       Body: file.buffer,
     };
 
     s3.upload(params, (err, data) => {
       if (err) {
-        console.log(err), reject(err);
+        console.log("@@!!!!!!@#!#!@#!@#@#@!#!@# file", err), reject(err);
       }
       const dataObj = {
         fileUrl: data.Location,
