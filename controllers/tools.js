@@ -101,6 +101,68 @@ const delTools = async (req, res, next) => {
   }
   res.status(201).json({ message: "Deleted successfully", error: false });
 };
+const addPartsItem = async (req, res, next) => {
+  const { partNo, description } = req.body;
+  const { toolId } = req.params;
+
+  try {
+    await toolsModel.updateOne(
+      { _id: toolId },
+      {
+        $push: {
+          parts: {
+            partNo,
+            description,
+          },
+        },
+      }
+    );
+  } catch (error) {
+    res.json({ message: "Could not find the tool", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
+const editPartsItem = async (req, res, next) => {
+  const { partNo, description } = req.body;
+  const { toolId, partId } = req.params;
+  try {
+    userToBeEdited = await toolsModel.findById(toolId);
+  } catch (error) {
+    res.json({ message: "Could not find the tool", error: true });
+    return next(error);
+  }
+  userToBeEdited.parts.forEach((i) => {
+    if (i.id == partId) {
+      i.partNo = partNo;
+      i.description = description;
+    }
+  });
+  try {
+    await userToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit parts/Items", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
+const delPartsItem = async (req, res, next) => {
+  const { toolId, partId } = req.params;
+  try {
+    await toolsModel.updateOne(
+      { _id: toolId },
+      {
+        $pull: {
+          parts: { _id: partId },
+        },
+      }
+    );
+  } catch (error) {
+    res.json({ message: "Could not find the tool", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Deleted successfully", error: false });
+};
 // const addInfo = async (req, res, next) => {
 //   const { toolId } = req.params;
 //   const { subCategory, employee, project, lastPurchasePrice, picture } =
@@ -156,3 +218,6 @@ exports.delTools = delTools;
 exports.getTools = getTools;
 // exports.addInfo = addInfo;
 // exports.editInfo = editInfo;
+exports.addPartsItem = addPartsItem;
+exports.editPartsItem = editPartsItem;
+exports.delPartsItem = delPartsItem;

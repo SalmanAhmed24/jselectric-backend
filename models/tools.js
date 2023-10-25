@@ -14,8 +14,7 @@ const toolsSchema = new mongoose.Schema({
   toolNumber: { type: String },
   parts: [
     {
-      partName: { type: String },
-      quantity: { type: Number },
+      partNo: { type: String },
       description: { type: String },
     },
   ],

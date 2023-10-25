@@ -19,4 +19,8 @@ router.patch("/:toolId", toolsCon.editTools);
 router.delete("/:toolId", toolsCon.delTools);
 // router.patch("/addInfo/:toolId", toolsCon.addInfo);
 // router.patch("/editInfo/:toolId", toolsCon.editInfo);
+router.post("/addPartsItems/:toolId", toolsCon.addPartsItem);
+router.patch("/editPartsItems/:toolId&&:partId", toolsCon.editPartsItem);
+router.delete("/deletePartsItems/:toolId&&:partId", toolsCon.delPartsItem);
+
 module.exports = router;
