@@ -18,7 +18,20 @@ const toolsSchema = new mongoose.Schema({
       description: { type: String },
     },
   ],
-  files: [{ type: Object }],
+  attachments: [
+    {
+      files: [
+        {
+          fileUrl: { type: String },
+          filename: { type: String },
+        },
+      ],
+      user: { type: String },
+      date: { type: String },
+      time: { type: String },
+      note: { type: String },
+    },
+  ],
   history: [{ type: Object }],
 });
 module.exports = mongoose.model("tools", toolsSchema);
