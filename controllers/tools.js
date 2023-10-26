@@ -1,3 +1,13 @@
+const aws = require("aws-sdk");
+const dotenv = require("dotenv");
+const momentObj = require("moment");
+dotenv.config();
+const s3 = new aws.S3({
+  accessKeyId: `${process.env.ACCESS_KEY_AWS}`,
+  secretAccessKey: `${process.env.SECRET_KEY_AWS}`,
+  region: `${process.env.AWS_BUCKET_REGION}`,
+  Bucket: `${process.env.AWS_BUCKET_NAME}`,
+});
 const toolsModel = require("../models/tools");
 const addTools = async (req, res, next) => {
   const {
