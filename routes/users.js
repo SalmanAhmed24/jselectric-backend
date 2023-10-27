@@ -32,5 +32,6 @@ router.delete("/delNotes/:userId&&:noteId", userCon.delNotes);
 router.patch("/addFiles/:userId", userCon.addFiles);
 router.patch("/editFiles/:userId", userCon.editFiles);
 router.patch("/delFiles/:userId&&:attachmentId", userCon.delFiles);
+router.get("/:name", userCon.getUserByName);
 router.post("/login", userCon.loginUser);
 module.exports = router;

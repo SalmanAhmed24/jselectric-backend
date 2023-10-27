@@ -4,6 +4,7 @@ const { uploadFile, getFile } = require("../s3");
 const aws = require("aws-sdk");
 const dotenv = require("dotenv");
 const momentObj = require("moment");
+const { options } = require("../routes/users");
 dotenv.config();
 const s3 = new aws.S3({
   accessKeyId: `${process.env.ACCESS_KEY_AWS}`,
@@ -472,7 +473,22 @@ const uploadToS3 = (file) => {
     });
   });
 };
-
+const getUserByName = async (req, res, next) => {
+  const { name } = req.params;
+  let allUsers;
+  try {
+    allUsers = await userModel.find({
+      fullname: { $regex: name, $options: "i" },
+    });
+  } catch (error) {
+    res.json({ message: "Error finding users list", error: true });
+    return next(error);
+  }
+  res.json({
+    allUsers: allUsers.map((item) => item.toObject({ getters: true })),
+    error: false,
+  });
+};
 exports.addUser = addUser;
 exports.getUsers = getUsers;
 exports.editUser = editUser;
@@ -486,3 +502,4 @@ exports.delNotes = delNotes;
 exports.addFiles = addFiles;
 exports.editFiles = editFiles;
 exports.delFiles = delFiles;
+exports.getUserByName = getUserByName;
