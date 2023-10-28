@@ -9,6 +9,11 @@ app.use(cors());
 
 const usersRoutes = require("./routes/users");
 const usersTypeRoutes = require("./routes/userType");
+const taxCodeRoutes = require("./routes/taxCode");
+const customerTypeRoutes = require("./routes/customerType");
+const materialLevelRoutes = require("./routes/materialLevel");
+const laborLevelRoutes = require("./routes/laborLevel");
+const customerTermRoutes = require("./routes/customerTerm");
 const positionRoutes = require("./routes/position");
 const deviceRoutes = require("./routes/devices");
 const vehicleRoutes = require("./routes/vehicle");
@@ -31,13 +36,17 @@ mongoose
 
 app.use("/api/users", usersRoutes);
 app.use("/api/userType", usersTypeRoutes);
+app.use("/api/customerType", customerTypeRoutes);
+app.use("/api/materialLevel", materialLevelRoutes);
+app.use("/api/laborLevel", laborLevelRoutes);
+app.use("/api/customerTerm", customerTermRoutes);
 app.use("/api/position", positionRoutes);
 app.use("/api/devices", deviceRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/tools", toolsRoutes);
 app.use("/api/toolCategory", toolsCategoryRoutes);
 app.use("/api/deviceCategory", deviceCategoryRoutes);
-
+app.use("/api/taxCode", taxCodeRoutes);
 app.use("/api/subtoolCategory", subtoolsCategoryRoutes);
 
 const PORT = process.env.PORT || 9000;
