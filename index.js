@@ -20,7 +20,7 @@ const vehicleRoutes = require("./routes/vehicle");
 const toolsRoutes = require("./routes/tools");
 const toolsCategoryRoutes = require("./routes/toolCategory");
 const deviceCategoryRoutes = require("./routes/deviceCategory");
-
+const salesPersonRoutes = require("./routes/salesPerson");
 const subtoolsCategoryRoutes = require("./routes/subtoolCategory");
 
 const url =
@@ -48,7 +48,7 @@ app.use("/api/toolCategory", toolsCategoryRoutes);
 app.use("/api/deviceCategory", deviceCategoryRoutes);
 app.use("/api/taxCode", taxCodeRoutes);
 app.use("/api/subtoolCategory", subtoolsCategoryRoutes);
-
+app.use("/api/salesPersonCode", salesPersonRoutes);
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `);
