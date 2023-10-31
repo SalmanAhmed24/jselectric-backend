@@ -57,45 +57,98 @@ const addTools = async (req, res, next) => {
   res.json({ message: "Created Successfully", error: false });
 };
 const editTools = async (req, res, next) => {
-  const {
-    category,
-    description,
-    techAssigned,
-    location,
-    subCategory,
-    employee,
-    project,
-    lastPurchasePrice,
-    picture,
-    serial,
-    toolNumber,
-  } = req.body;
-  const { toolId } = req.params;
-  let toolsToBeEdited;
-  try {
-    toolsToBeEdited = await toolsModel.findById(toolId);
-  } catch (error) {
-    res.json({ message: "Could not find the tools", error: true });
-    return next(error);
+  if (req.body.newFileFlag == false) {
+    const {
+      category,
+      description,
+      techAssigned,
+      location,
+      subCategory,
+      employee,
+      project,
+      lastPurchasePrice,
+      picture,
+      serial,
+      toolNumber,
+    } = req.body;
+    const { toolId } = req.params;
+    let toolsToBeEdited;
+    try {
+      toolsToBeEdited = await toolsModel.findById(toolId);
+    } catch (error) {
+      res.json({ message: "Could not find the tools", error: true });
+      return next(error);
+    }
+    toolsToBeEdited.category = category;
+    toolsToBeEdited.description = description;
+    toolsToBeEdited.techAssigned = techAssigned;
+    toolsToBeEdited.location = location;
+    toolsToBeEdited.subCategory = subCategory;
+    toolsToBeEdited.employee = employee;
+    toolsToBeEdited.project = project;
+    toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
+    toolsToBeEdited.picture = picture;
+    toolsToBeEdited.serial = serial;
+    toolsToBeEdited.toolNumber = toolNumber;
+    try {
+      await toolsToBeEdited.save();
+    } catch (error) {
+      res.json({ message: "Enable to edit tools", error: true });
+      return next(error);
+    }
+    res.status(201).json({ message: "Edited successfully", error: false });
+  } else {
+    const {
+      category,
+      description,
+      techAssigned,
+      location,
+      subCategory,
+      employee,
+      project,
+      lastPurchasePrice,
+      picture,
+      serial,
+      toolNumber,
+    } = req.body;
+    var arr = [];
+    try {
+      await uploadToS3(req.files[0])
+        .then((res) => {
+          arrReturn(res, arr);
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      res.json({ message: "Error Occured in S3 upload", error: true });
+    }
+
+    const { toolId } = req.params;
+    let toolsToBeEdited;
+    try {
+      toolsToBeEdited = await toolsModel.findById(toolId);
+    } catch (error) {
+      res.json({ message: "Could not find the tools", error: true });
+      return next(error);
+    }
+    toolsToBeEdited.category = category;
+    toolsToBeEdited.description = description;
+    toolsToBeEdited.techAssigned = techAssigned;
+    toolsToBeEdited.location = location;
+    toolsToBeEdited.subCategory = subCategory;
+    toolsToBeEdited.employee = employee;
+    toolsToBeEdited.project = project;
+    toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
+    toolsToBeEdited.picture = arr[0];
+    toolsToBeEdited.serial = serial;
+    toolsToBeEdited.toolNumber = toolNumber;
+    try {
+      await toolsToBeEdited.save();
+    } catch (error) {
+      res.json({ message: "Enable to edit tools", error: true });
+      return next(error);
+    }
+    res.status(201).json({ message: "Edited successfully", error: false });
   }
-  toolsToBeEdited.category = category;
-  toolsToBeEdited.description = description;
-  toolsToBeEdited.techAssigned = techAssigned;
-  toolsToBeEdited.location = location;
-  toolsToBeEdited.subCategory = subCategory;
-  toolsToBeEdited.employee = employee;
-  toolsToBeEdited.project = project;
-  toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
-  toolsToBeEdited.picture = picture;
-  toolsToBeEdited.serial = serial;
-  toolsToBeEdited.toolNumber = toolNumber;
-  try {
-    await toolsToBeEdited.save();
-  } catch (error) {
-    res.json({ message: "Enable to edit tools", error: true });
-    return next(error);
-  }
-  res.status(201).json({ message: "Edited successfully", error: false });
 };
 const getTools = async (req, res, next) => {
   let alltools;
