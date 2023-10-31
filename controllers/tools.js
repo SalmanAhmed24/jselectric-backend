@@ -22,6 +22,7 @@ const addTools = async (req, res, next) => {
     serial,
     toolNumber,
   } = req.body;
+  console.log("@@@@", req.files);
   var arr = [];
   try {
     await uploadToS3(req.files[0])
