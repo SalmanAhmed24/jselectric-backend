@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 const router = express.Router();
-router.use(multer({ limits: { fieldSize: 25 * 1024 * 1024 } }).any());
+router.use(multer().array("picture", 1));
 
 // user controllers
 const toolsCon = require("../controllers/tools.js");

@@ -19,10 +19,19 @@ const addTools = async (req, res, next) => {
     employee,
     project,
     lastPurchasePrice,
-    picture,
     serial,
     toolNumber,
   } = req.body;
+  var arr = [];
+  try {
+    await uploadToS3(req.files[0])
+      .then((res) => {
+        arrReturn(res, arr);
+      })
+      .catch((err) => console.log(err));
+  } catch (error) {
+    res.json({ message: "Error Occured in S3 upload", error: true });
+  }
   const createToolsModel = new toolsModel({
     category,
     description,
@@ -32,7 +41,7 @@ const addTools = async (req, res, next) => {
     employee,
     project,
     lastPurchasePrice,
-    picture,
+    picture: { fileUrl: arr[0].fileUrl, filename: arr[0].filename },
     serial,
     toolNumber,
     parts: [],

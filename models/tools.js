@@ -9,7 +9,10 @@ const toolsSchema = new mongoose.Schema({
   employee: { type: String },
   project: { type: String },
   lastPurchasePrice: { type: String },
-  picture: { type: String },
+  picture: {
+    fileUrl: { type: String },
+    filename: { type: String },
+  },
   serial: { type: String },
   toolNumber: { type: String },
   parts: [
