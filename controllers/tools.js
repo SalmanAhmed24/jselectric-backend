@@ -58,7 +58,7 @@ const addTools = async (req, res, next) => {
   res.json({ message: "Created Successfully", error: false });
 };
 const editTools = async (req, res, next) => {
-  if (req.body.newFileFlag == false && req.body.editFlag == true) {
+  if (req.body.newFileFlag == "false" && req.body.editFlag == "true") {
     const {
       category,
       description,
@@ -88,7 +88,7 @@ const editTools = async (req, res, next) => {
     toolsToBeEdited.employee = employee;
     toolsToBeEdited.project = project;
     toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
-    toolsToBeEdited.picture = pictureObj;
+    toolsToBeEdited.picture = JSON.parse(pictureObj);
     toolsToBeEdited.serial = serial;
     toolsToBeEdited.toolNumber = toolNumber;
     try {
@@ -111,8 +111,16 @@ const editTools = async (req, res, next) => {
       picture,
       serial,
       toolNumber,
+      oldFiles,
     } = req.body;
     var arr = [];
+    try {
+      const prevFile = JSON.parse(oldFiles);
+      deleteAwsObj(prevFile);
+    } catch (error) {
+      res.json({ message: "Error deleting S3 image", error: true });
+      return next(error);
+    }
     try {
       await uploadToS3(req.files[0])
         .then((res) => {
@@ -121,6 +129,7 @@ const editTools = async (req, res, next) => {
         .catch((err) => console.log(err));
     } catch (error) {
       res.json({ message: "Error Occured in S3 upload", error: true });
+      return next(error);
     }
 
     const { toolId } = req.params;
@@ -166,6 +175,12 @@ const getTools = async (req, res, next) => {
 };
 const delTools = async (req, res, next) => {
   const { toolId } = req.params;
+  try {
+    deleteAwsObj(JSON.parse(req.body.file));
+  } catch (error) {
+    res.json({ message: "Error deleting S3 image", error: true });
+    return next(error);
+  }
   try {
     await toolsModel.findByIdAndRemove(toolId);
   } catch (error) {

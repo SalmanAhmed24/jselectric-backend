@@ -16,7 +16,7 @@ const toolsCon = require("../controllers/tools.js");
 router.get("/", toolsCon.getTools);
 router.post("/addTools", toolsCon.addTools);
 router.patch("/:toolId", toolsCon.editTools);
-router.delete("/:toolId", toolsCon.delTools);
+router.put("/:toolId", toolsCon.delTools);
 // router.patch("/addInfo/:toolId", toolsCon.addInfo);
 // router.patch("/editInfo/:toolId", toolsCon.editInfo);
 router.post("/addPartsItems/:toolId", toolsCon.addPartsItem);
