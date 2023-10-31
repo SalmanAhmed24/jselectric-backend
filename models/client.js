@@ -1,0 +1,33 @@
+const mongoose = require("mongoose");
+const validator = require("mongoose-unique-validator");
+const clientsSchema = new mongoose.Schema({
+  customerCode: { type: String },
+  customerName: { type: String },
+  alphaCode: { type: String },
+  address: { type: String },
+  city: { type: String },
+  state: { type: String },
+  zipCode: { type: String },
+  phone: { type: String },
+  fax: { type: String },
+  primaryContact: { type: String },
+  customerType: { type: String },
+  balance: { type: String },
+  taxable: { type: String },
+  status: { type: String },
+  customerTerm: { type: String },
+  taxCode: { type: String },
+  retailCertificate: { type: String },
+  resaleExpDate: { type: String },
+  salesPersonCode: { type: String },
+  receiveStatements: { type: String },
+  financeCharge: { type: String },
+  retention: { type: String },
+  lastDateBilled: { type: String },
+  lastDatePaid: { type: String },
+  dateEstablished: { type: String },
+  creditLimit: { type: String },
+  materialLevel: { type: String },
+  laborLevel: { type: String },
+});
+module.exports = mongoose.model("clients", clientsSchema);

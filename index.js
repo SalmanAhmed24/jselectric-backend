@@ -22,6 +22,7 @@ const toolsCategoryRoutes = require("./routes/toolCategory");
 const deviceCategoryRoutes = require("./routes/deviceCategory");
 const salesPersonRoutes = require("./routes/salesPerson");
 const subtoolsCategoryRoutes = require("./routes/subtoolCategory");
+const clientRoutes = require("./routes/client");
 
 const url =
   "mongodb+srv://book-a-tutorDB:reactive_007@cluster0.2art5.mongodb.net/jselectric";
@@ -49,6 +50,7 @@ app.use("/api/deviceCategory", deviceCategoryRoutes);
 app.use("/api/taxCode", taxCodeRoutes);
 app.use("/api/subtoolCategory", subtoolsCategoryRoutes);
 app.use("/api/salesPersonCode", salesPersonRoutes);
+app.use("/api/clients", clientRoutes);
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `);
