@@ -57,7 +57,7 @@ const addTools = async (req, res, next) => {
   res.json({ message: "Created Successfully", error: false });
 };
 const editTools = async (req, res, next) => {
-  if (req.body.newFileFlag == false) {
+  if (req.body.newFileFlag == false && req.body.editFlag == true) {
     const {
       category,
       description,
@@ -67,7 +67,7 @@ const editTools = async (req, res, next) => {
       employee,
       project,
       lastPurchasePrice,
-      picture,
+      pictureObj,
       serial,
       toolNumber,
     } = req.body;
@@ -87,7 +87,7 @@ const editTools = async (req, res, next) => {
     toolsToBeEdited.employee = employee;
     toolsToBeEdited.project = project;
     toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
-    toolsToBeEdited.picture = picture;
+    toolsToBeEdited.picture = pictureObj;
     toolsToBeEdited.serial = serial;
     toolsToBeEdited.toolNumber = toolNumber;
     try {
