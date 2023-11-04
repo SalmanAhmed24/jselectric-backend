@@ -178,7 +178,7 @@ const getCustomerByName = async (req, res, next) => {
     return next(error);
   }
   res.json({
-    allClients: allClients.map((item) => item.toObject({ getters: true })),
+    clients: allClients.map((item) => item.toObject({ getters: true })),
     error: false,
   });
 };
