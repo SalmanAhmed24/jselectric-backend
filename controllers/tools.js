@@ -486,7 +486,58 @@ const uploadToS3 = (file) => {
     });
   });
 };
-
+const addHistory = async (req, res, next) => {
+  const { toolNumber, techAssigned, job, date, time, user } = req.body;
+  console.log("###", req.files);
+  console.log("@@@", toolNumber, techAssigned, job);
+  var arr = [];
+  let toolsToBeEdited;
+  try {
+    await uploadToS3(req.files[0])
+      .then((res) => {
+        arrReturn(res, arr);
+      })
+      .catch((err) => console.log(err));
+  } catch (error) {
+    res.json({ message: "Error Occured in S3 upload", error: true });
+  }
+  try {
+    toolsToBeEdited = await toolsModel.findOne({ toolNumber: toolNumber });
+  } catch (error) {
+    res.json({ message: "Could not find the attachments", error: true });
+    return next(error);
+  }
+  console.log("$$$$$", toolsToBeEdited);
+  toolsToBeEdited.techAssigned = techAssigned;
+  try {
+    await toolsToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit tools techAssigned", error: true });
+    return next(error);
+  }
+  try {
+    await toolsModel.updateOne(
+      { toolNumber: toolNumber },
+      {
+        $push: {
+          history: {
+            job: job,
+            file: arr[0],
+            techAssigned: techAssigned,
+            toolNumber: toolNumber,
+            date: date,
+            time: time,
+            user: user,
+          },
+        },
+      }
+    );
+  } catch (error) {
+    res.json({ message: "Could not find the tools", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
 exports.addTools = addTools;
 exports.editTools = editTools;
 exports.delTools = delTools;
@@ -499,3 +550,4 @@ exports.delPartsItem = delPartsItem;
 exports.addFiles = addFiles;
 exports.editFiles = editFiles;
 exports.delFiles = delFiles;
+exports.addHistory = addHistory;

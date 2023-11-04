@@ -35,6 +35,16 @@ const toolsSchema = new mongoose.Schema({
       note: { type: String },
     },
   ],
-  history: [{ type: Object }],
+  history: [
+    {
+      job: { type: String },
+      file: { fileUrl: { type: String }, filename: { type: String } },
+      techAssigned: { type: String },
+      toolNumber: { type: String },
+      date: { type: String },
+      time: { type: String },
+      user: { type: String },
+    },
+  ],
 });
 module.exports = mongoose.model("tools", toolsSchema);

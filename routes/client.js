@@ -14,4 +14,5 @@ router.get("/", clientCon.getClient);
 router.post("/addClient", clientCon.addClient);
 router.patch("/:clientId", clientCon.editClient);
 router.delete("/:clientId", clientCon.deleteClient);
+router.get("/:name", clientCon.getCustomerByName);
 module.exports = router;

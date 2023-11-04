@@ -166,7 +166,24 @@ const deleteClient = async (req, res, next) => {
   }
   res.status(201).json({ message: "Deleted successfully", error: false });
 };
+const getCustomerByName = async (req, res, next) => {
+  const { name } = req.params;
+  let allClients;
+  try {
+    allClients = await clientsModel.find({
+      customerName: { $regex: name, $options: "i" },
+    });
+  } catch (error) {
+    res.json({ message: "Error finding users list", error: true });
+    return next(error);
+  }
+  res.json({
+    allClients: allClients.map((item) => item.toObject({ getters: true })),
+    error: false,
+  });
+};
 exports.addClient = addClient;
 exports.getClient = getClient;
 exports.editClient = editClient;
 exports.deleteClient = deleteClient;
+exports.getCustomerByName = getCustomerByName;
