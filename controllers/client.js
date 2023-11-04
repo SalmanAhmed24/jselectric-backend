@@ -29,6 +29,8 @@ const addClient = async (req, res, next) => {
     creditLimit,
     materialLevel,
     laborLevel,
+    primaryEmail,
+    secondaryEmail,
   } = req.body;
   const createClientModel = new clientsModel({
     customerCode,
@@ -59,6 +61,8 @@ const addClient = async (req, res, next) => {
     creditLimit,
     materialLevel,
     laborLevel,
+    primaryEmail,
+    secondaryEmail,
   });
   try {
     await createClientModel.save();
@@ -107,6 +111,8 @@ const editClient = async (req, res, next) => {
     retention,
     lastDateBilled,
     lastDatePaid,
+    primaryEmail,
+    secondaryEmail,
     dateEstablished,
     creditLimit,
     materialLevel,
@@ -143,7 +149,9 @@ const editClient = async (req, res, next) => {
   clientToBeEdited.financeCharge = financeCharge;
   clientToBeEdited.retention = retention;
   clientToBeEdited.lastDateBilled = lastDateBilled;
-  clientToBeEdited.lastDatePaid = lastDateBilled;
+  clientToBeEdited.lastDatePaid = lastDatePaid;
+  clientToBeEdited.primaryEmail = primaryEmail;
+  clientToBeEdited.secondaryEmail = secondaryEmail;
   clientToBeEdited.dateEstablished = dateEstablished;
   clientToBeEdited.creditLimit = creditLimit;
   clientToBeEdited.materialLevel = materialLevel;

@@ -11,6 +11,8 @@ const clientsSchema = new mongoose.Schema({
   phone: { type: String },
   fax: { type: String },
   primaryContact: { type: String },
+  primaryEmail: { type: String },
+  secondaryEmail: { type: String },
   customerType: { type: String },
   balance: { type: String },
   taxable: { type: String },
