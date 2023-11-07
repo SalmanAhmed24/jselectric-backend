@@ -507,9 +507,11 @@ const addSchedule = async (req, res, next) => {
       }
     );
   } catch (error) {
+    console.log(error);
     res.json({ message: "Error occured while adding schedule", error: true });
     return next(error);
   }
+  res.json({ message: "added schedule", error: false });
 };
 exports.addUser = addUser;
 exports.getUsers = getUsers;
