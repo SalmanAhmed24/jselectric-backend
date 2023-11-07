@@ -33,5 +33,6 @@ router.patch("/addFiles/:userId", userCon.addFiles);
 router.patch("/editFiles/:userId", userCon.editFiles);
 router.patch("/delFiles/:userId&&:attachmentId", userCon.delFiles);
 router.get("/:name", userCon.getUserByName);
+router.post("/addSchedule/:userId", userCon.addSchedule);
 router.post("/login", userCon.loginUser);
 module.exports = router;

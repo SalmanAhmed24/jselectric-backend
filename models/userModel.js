@@ -45,6 +45,14 @@ const userSchema = new mongoose.Schema({
       note: { type: String },
     },
   ],
+  schedules: [
+    {
+      day: { type: String },
+      date: { type: String },
+      startTime: { type: String },
+      endTime: { type: String },
+    },
+  ],
 });
 userSchema.plugin(validator);
 module.exports = mongoose.model("users", userSchema);

@@ -489,6 +489,28 @@ const getUserByName = async (req, res, next) => {
     error: false,
   });
 };
+const addSchedule = async (req, res, next) => {
+  const { date, day, startTime, endTime } = req.body;
+  const { userId } = req.params;
+  try {
+    await userModel.updateOne(
+      { _id: userId },
+      {
+        $push: {
+          schedules: {
+            date: date,
+            day: day,
+            startTime: startTime,
+            endTime: endTime,
+          },
+        },
+      }
+    );
+  } catch (error) {
+    res.json({ message: "Error occured while adding schedule", error: true });
+    return next(error);
+  }
+};
 exports.addUser = addUser;
 exports.getUsers = getUsers;
 exports.editUser = editUser;
@@ -503,3 +525,4 @@ exports.addFiles = addFiles;
 exports.editFiles = editFiles;
 exports.delFiles = delFiles;
 exports.getUserByName = getUserByName;
+exports.addSchedule = addSchedule;
