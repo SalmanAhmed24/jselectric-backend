@@ -490,7 +490,7 @@ const getUserByName = async (req, res, next) => {
   });
 };
 const addSchedule = async (req, res, next) => {
-  const { date, day, startTime, endTime } = req.body;
+  const { startDate, endDate } = req.body;
   const { userId } = req.params;
   try {
     await userModel.updateOne(
@@ -498,10 +498,8 @@ const addSchedule = async (req, res, next) => {
       {
         $push: {
           schedules: {
-            date: date,
-            day: day,
-            startTime: startTime,
-            endTime: endTime,
+            startDate: startDate,
+            endDate: endDate,
           },
         },
       }

@@ -47,10 +47,8 @@ const userSchema = new mongoose.Schema({
   ],
   schedules: [
     {
-      day: { type: String },
-      date: { type: String },
-      startTime: { type: String },
-      endTime: { type: String },
+      startDate: { type: String },
+      endDate: { type: String },
     },
   ],
 });
