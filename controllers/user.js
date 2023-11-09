@@ -512,6 +512,25 @@ const addSchedule = async (req, res, next) => {
   }
   res.json({ message: "added schedule", error: false });
 };
+const delSchedule = async (req, res, next) => {
+  const { userId, scheduleId } = req.params;
+  console.log("wow", userId, scheduleId);
+  try {
+    await userModel.updateOne(
+      { _id: userId },
+      {
+        $pull: {
+          schedules: { _id: scheduleId },
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.json({ message: "Error occured while adding schedule", error: true });
+    return next(error);
+  }
+  res.json({ message: "added schedule", error: false });
+};
 exports.addUser = addUser;
 exports.getUsers = getUsers;
 exports.editUser = editUser;
@@ -527,3 +546,4 @@ exports.editFiles = editFiles;
 exports.delFiles = delFiles;
 exports.getUserByName = getUserByName;
 exports.addSchedule = addSchedule;
+exports.delSchedule = delSchedule;
