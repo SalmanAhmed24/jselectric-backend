@@ -35,5 +35,6 @@ router.patch("/delFiles/:userId&&:attachmentId", userCon.delFiles);
 router.get("/:name", userCon.getUserByName);
 router.post("/addSchedule/:userId", userCon.addSchedule);
 router.delete("/deleteSchedule/:userId&&:scheduleId", userCon.delSchedule);
+router.post("/editSchedule/:userId", userCon.editSchedule);
 router.post("/login", userCon.loginUser);
 module.exports = router;

@@ -512,9 +512,33 @@ const addSchedule = async (req, res, next) => {
   }
   res.json({ message: "added schedule", error: false });
 };
+const editSchedule = async (req, res, next) => {
+  const { userId } = req.params;
+  const { date, startTime, endTime, id } = req.body;
+  let userToBeEdited;
+  try {
+    userToBeEdited = await userModel.findById(userId);
+  } catch (error) {
+    res.json({ message: "Could not find the user", error: true });
+    return next(error);
+  }
+  userToBeEdited.schedules.forEach((i) => {
+    if (i._id == id) {
+      i.date = date;
+      i.startTime = startTime;
+      i.endTime = endTime;
+    }
+  });
+  try {
+    await userToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit Schedule", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
 const delSchedule = async (req, res, next) => {
   const { userId, scheduleId } = req.params;
-  console.log("wow", userId, scheduleId);
   try {
     await userModel.updateOne(
       { _id: userId },
@@ -547,3 +571,4 @@ exports.delFiles = delFiles;
 exports.getUserByName = getUserByName;
 exports.addSchedule = addSchedule;
 exports.delSchedule = delSchedule;
+exports.editSchedule = editSchedule;
