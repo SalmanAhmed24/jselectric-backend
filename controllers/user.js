@@ -490,7 +490,7 @@ const getUserByName = async (req, res, next) => {
   });
 };
 const addSchedule = async (req, res, next) => {
-  const { date, startTime, endTime } = req.body;
+  const { date, startTime, endTime, title } = req.body;
   const { userId } = req.params;
   try {
     await userModel.updateOne(
@@ -501,6 +501,7 @@ const addSchedule = async (req, res, next) => {
             date: date,
             startTime: startTime,
             endTime: endTime,
+            title: title,
           },
         },
       }
@@ -514,7 +515,7 @@ const addSchedule = async (req, res, next) => {
 };
 const editSchedule = async (req, res, next) => {
   const { userId } = req.params;
-  const { date, startTime, endTime, id } = req.body;
+  const { date, startTime, endTime, title, id } = req.body;
   let userToBeEdited;
   try {
     userToBeEdited = await userModel.findById(userId);
@@ -527,6 +528,7 @@ const editSchedule = async (req, res, next) => {
       i.date = date;
       i.startTime = startTime;
       i.endTime = endTime;
+      i.title = title;
     }
   });
   try {

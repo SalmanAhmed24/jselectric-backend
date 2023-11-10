@@ -50,6 +50,7 @@ const userSchema = new mongoose.Schema({
       date: { type: String },
       startTime: { type: String },
       endTime: { type: String },
+      title: { type: String },
     },
   ],
 });
