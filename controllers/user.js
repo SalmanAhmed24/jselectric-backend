@@ -20,6 +20,10 @@ const addUser = async (req, res, next) => {
     creditCard,
     tablet,
     city,
+    primaryAddress,
+    secondaryAddress,
+    state,
+    zipcode,
     fullname,
     email,
     personalPhone,
@@ -33,6 +37,10 @@ const addUser = async (req, res, next) => {
     vehicle,
     tablet,
     city,
+    primaryAddress,
+    secondaryAddress,
+    state,
+    zipcode,
     fullname,
     email,
     creditCard,
@@ -71,6 +79,10 @@ const editUser = async (req, res, next) => {
     tablet,
     creditCard,
     city,
+    primaryAddress,
+    secondaryAddress,
+    state,
+    zipcode,
     fullname,
     email,
     personalPhone,
@@ -99,6 +111,10 @@ const editUser = async (req, res, next) => {
   userToBeEdited.password = password;
   userToBeEdited.userType = userType;
   userToBeEdited.creditCard = creditCard;
+  userToBeEdited.primaryAddress = primaryAddress;
+  userToBeEdited.secondaryAddress = secondaryAddress;
+  userToBeEdited.state = state;
+  userToBeEdited.zipcode = zipcode;
   try {
     await userToBeEdited.save();
   } catch (error) {
