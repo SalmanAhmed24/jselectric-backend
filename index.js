@@ -61,9 +61,15 @@ const server = app.listen(PORT, () => {
 });
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
+
   cors: {
-    origin: "https://jselectric.vercel.app/",
+    origin: true,
+    credentials: true,
+    methods: ["GET", "POST"],
+    // allowedHeaders: ["my-custom-header"],
+    // exposedHeaders: ["my-custom-header"],
   },
+  allowEIO3: true,
 });
 io.on("connection", (socket) => {
   console.log("connected to socket.io");
