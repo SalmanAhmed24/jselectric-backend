@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -56,20 +58,13 @@ app.use("/api/chats", chatRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/message", messageRoutes);
 const PORT = process.env.PORT || 9000;
-const server = app.listen(PORT, () => {
-  console.log(`API listening on PORT ${PORT} `);
-});
-const io = require("socket.io")(server, {
-  pingTimeout: 60000,
-
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
   cors: {
-    origin: true,
+    origin: "https://jselectric.vercel.app",
+    allowedHeaders: ["my-custom-header"],
     credentials: true,
-    methods: ["GET", "POST"],
-    // allowedHeaders: ["my-custom-header"],
-    // exposedHeaders: ["my-custom-header"],
   },
-  allowEIO3: true,
 });
 io.on("connection", (socket) => {
   console.log("connected to socket.io");
@@ -105,4 +100,7 @@ io.on("connection", (socket) => {
     console.log("USER DISCONNECTED");
     socket.leave(userDataMain.id);
   });
+});
+httpServer.listen(PORT, () => {
+  console.log(`API listening on PORT ${PORT} `);
 });
