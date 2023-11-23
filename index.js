@@ -23,6 +23,8 @@ const deviceCategoryRoutes = require("./routes/deviceCategory");
 const salesPersonRoutes = require("./routes/salesPerson");
 const subtoolsCategoryRoutes = require("./routes/subtoolCategory");
 const clientRoutes = require("./routes/client");
+const chatRoutes = require("./routes/chat");
+const messageRoutes = require("./routes/message");
 
 const url =
   "mongodb+srv://book-a-tutorDB:reactive_007@cluster0.2art5.mongodb.net/jselectric";
@@ -50,8 +52,51 @@ app.use("/api/deviceCategory", deviceCategoryRoutes);
 app.use("/api/taxCode", taxCodeRoutes);
 app.use("/api/subtoolCategory", subtoolsCategoryRoutes);
 app.use("/api/salesPersonCode", salesPersonRoutes);
+app.use("/api/chats", chatRoutes);
 app.use("/api/clients", clientRoutes);
+app.use("/api/message", messageRoutes);
 const PORT = process.env.PORT || 9000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `);
+});
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "https://jselectric.vercel.app/",
+  },
+});
+io.on("connection", (socket) => {
+  console.log("connected to socket.io");
+  var userDataMain;
+  socket.on("setup", (userData) => {
+    userDataMain = userData;
+    console.log("!!!!!", userData.id);
+    socket.join(userData.id);
+    socket.emit("connected");
+  });
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log("##### JOINED ROOM", room);
+  });
+  socket.on("new message", (newMessageReceived) => {
+    console.log("error in newMessage", newMessageReceived);
+    var chat = newMessageReceived.chat;
+    console.log("here is chat backend", chat);
+    if (!chat.users) {
+      console.log("chat.users not found");
+    }
+    chat.users.forEach((user) => {
+      console.log("inner user", user);
+      if (user._id == newMessageReceived.sender._id) {
+        console.log("here in wow", newMessageReceived);
+        return;
+      }
+      console.log("here in not wow", newMessageReceived);
+      socket.in(user._id).emit("message received", newMessageReceived);
+    });
+  });
+  socket.off("setup", () => {
+    console.log("USER DISCONNECTED");
+    socket.leave(userDataMain.id);
+  });
 });
