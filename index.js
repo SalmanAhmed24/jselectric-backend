@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const { createServer } = require("http");
-const { Server } = require("socket.io");
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -58,49 +56,6 @@ app.use("/api/chats", chatRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/message", messageRoutes);
 const PORT = process.env.PORT || 9000;
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: "https://jselectric.vercel.app",
-    allowedHeaders: ["my-custom-header"],
-    credentials: true,
-  },
-});
-io.on("connection", (socket) => {
-  console.log("connected to socket.io");
-  var userDataMain;
-  socket.on("setup", (userData) => {
-    userDataMain = userData;
-    console.log("!!!!!", userData.id);
-    socket.join(userData.id);
-    socket.emit("connected");
-  });
-  socket.on("join chat", (room) => {
-    socket.join(room);
-    console.log("##### JOINED ROOM", room);
-  });
-  socket.on("new message", (newMessageReceived) => {
-    console.log("error in newMessage", newMessageReceived);
-    var chat = newMessageReceived.chat;
-    console.log("here is chat backend", chat);
-    if (!chat.users) {
-      console.log("chat.users not found");
-    }
-    chat.users.forEach((user) => {
-      console.log("inner user", user);
-      if (user._id == newMessageReceived.sender._id) {
-        console.log("here in wow", newMessageReceived);
-        return;
-      }
-      console.log("here in not wow", newMessageReceived);
-      socket.in(user._id).emit("message received", newMessageReceived);
-    });
-  });
-  socket.off("setup", () => {
-    console.log("USER DISCONNECTED");
-    socket.leave(userDataMain.id);
-  });
-});
-httpServer.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `);
 });
