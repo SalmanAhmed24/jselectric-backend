@@ -2,24 +2,30 @@ const messageModel = require("../models/message");
 const asyncHandler = require("express-async-handler");
 const userModel = require("../models/userModel");
 const chatModel = require("../models/chat");
+const Pusher = require("pusher");
+
 const addMessage = asyncHandler(async (req, res, next) => {
-  const { content, chatId, sender } = req.body;
+  const { content, chatId, sender, moduleAttachments } = req.body;
   var newMessage = {
     sender: sender,
     content: content,
     chat: chatId,
   };
+  console.log("@@!!!", moduleAttachments);
   try {
     var message = await messageModel.create(newMessage);
-
     message = await message.populate("sender", "fullname email");
     message = await message.populate("chat");
     message = await userModel.populate(message, {
       path: "chat.users",
       select: "fullname email",
     });
-    await chatModel.findByIdAndUpdate(chatId, { latestMessage: message });
-
+    await chatModel.findByIdAndUpdate(chatId, {
+      latestMessage: message,
+      $push: {
+        moduleAttachments: moduleAttachments,
+      },
+    });
     res.json({ messages: message, error: false });
   } catch (error) {
     res
