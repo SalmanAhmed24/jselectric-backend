@@ -24,38 +24,63 @@ const addTools = async (req, res, next) => {
   } = req.body;
   console.log("@@@@", req.files);
   var arr = [];
-  try {
-    await uploadToS3(req.files[0])
-      .then((res) => {
-        arrReturn(res, arr);
-      })
-      .catch((err) => console.log(err));
-  } catch (error) {
-    res.json({ message: "Error Occured in S3 upload", error: true });
+  if (req.files[0] == undefined) {
+    const createToolsModel = new toolsModel({
+      category,
+      description,
+      techAssigned,
+      location,
+      subCategory,
+      employee,
+      project,
+      lastPurchasePrice,
+      serial,
+      toolNumber,
+      parts: [],
+      files: [],
+      history: [],
+    });
+    try {
+      await createToolsModel.save();
+    } catch (error) {
+      res.json({ message: "Error adding Tools", error: true });
+      return next(error);
+    }
+    res.json({ message: "Created Successfully", error: false });
+  } else {
+    try {
+      await uploadToS3(req.files[0])
+        .then((res) => {
+          arrReturn(res, arr);
+        })
+        .catch((err) => console.log(err));
+    } catch (error) {
+      res.json({ message: "Error Occured in S3 upload", error: true });
+    }
+    const createToolsModel = new toolsModel({
+      category,
+      description,
+      techAssigned,
+      location,
+      subCategory,
+      employee,
+      project,
+      lastPurchasePrice,
+      picture: { fileUrl: arr[0].fileUrl, filename: arr[0].filename },
+      serial,
+      toolNumber,
+      parts: [],
+      files: [],
+      history: [],
+    });
+    try {
+      await createToolsModel.save();
+    } catch (error) {
+      res.json({ message: "Error adding Tools", error: true });
+      return next(error);
+    }
+    res.json({ message: "Created Successfully", error: false });
   }
-  const createToolsModel = new toolsModel({
-    category,
-    description,
-    techAssigned,
-    location,
-    subCategory,
-    employee,
-    project,
-    lastPurchasePrice,
-    picture: { fileUrl: arr[0].fileUrl, filename: arr[0].filename },
-    serial,
-    toolNumber,
-    parts: [],
-    files: [],
-    history: [],
-  });
-  try {
-    await createToolsModel.save();
-  } catch (error) {
-    res.json({ message: "Error adding Tools", error: true });
-    return next(error);
-  }
-  res.json({ message: "Created Successfully", error: false });
 };
 const editTools = async (req, res, next) => {
   if (req.body.newFileFlag == "false" && req.body.editFlag == "true") {
@@ -88,7 +113,11 @@ const editTools = async (req, res, next) => {
     toolsToBeEdited.employee = employee;
     toolsToBeEdited.project = project;
     toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
-    toolsToBeEdited.picture = JSON.parse(pictureObj);
+    if (pictureObj == undefined) {
+      return false;
+    } else {
+      toolsToBeEdited.picture = JSON.parse(pictureObj);
+    }
     toolsToBeEdited.serial = serial;
     toolsToBeEdited.toolNumber = toolNumber;
     try {
@@ -115,18 +144,27 @@ const editTools = async (req, res, next) => {
     } = req.body;
     var arr = [];
     try {
-      const prevFile = JSON.parse(oldFiles);
-      deleteAwsObj(prevFile);
+      console.log("oldold", oldFiles);
+      if (oldFiles == "undefined") {
+        console.log("here in undefined");
+      } else {
+        const prevFile = JSON.parse(oldFiles);
+        deleteAwsObj(prevFile);
+      }
     } catch (error) {
       res.json({ message: "Error deleting S3 image", error: true });
       return next(error);
     }
     try {
-      await uploadToS3(req.files[0])
-        .then((res) => {
-          arrReturn(res, arr);
-        })
-        .catch((err) => console.log(err));
+      if (req.files[0] == undefined || req.files[0].length == 0) {
+        return false;
+      } else {
+        await uploadToS3(req.files[0])
+          .then((res) => {
+            arrReturn(res, arr);
+          })
+          .catch((err) => console.log(err));
+      }
     } catch (error) {
       res.json({ message: "Error Occured in S3 upload", error: true });
       return next(error);
@@ -148,7 +186,11 @@ const editTools = async (req, res, next) => {
     toolsToBeEdited.employee = employee;
     toolsToBeEdited.project = project;
     toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
-    toolsToBeEdited.picture = arr[0];
+    if (arr[0] == undefined || arr[0].length == 0) {
+      return false;
+    } else {
+      toolsToBeEdited.picture = arr[0];
+    }
     toolsToBeEdited.serial = serial;
     toolsToBeEdited.toolNumber = toolNumber;
     try {
@@ -175,19 +217,29 @@ const getTools = async (req, res, next) => {
 };
 const delTools = async (req, res, next) => {
   const { toolId } = req.params;
-  try {
-    deleteAwsObj(JSON.parse(req.body.file));
-  } catch (error) {
-    res.json({ message: "Error deleting S3 image", error: true });
-    return next(error);
+  if (req.body.file == undefined) {
+    try {
+      await toolsModel.findByIdAndRemove(toolId);
+    } catch (error) {
+      res.json({ message: "Could not found the specific tool", error: true });
+      return next(error);
+    }
+    res.status(201).json({ message: "Deleted successfully", error: false });
+  } else {
+    try {
+      deleteAwsObj(JSON.parse(req.body.file));
+    } catch (error) {
+      res.json({ message: "Error deleting S3 image", error: true });
+      return next(error);
+    }
+    try {
+      await toolsModel.findByIdAndRemove(toolId);
+    } catch (error) {
+      res.json({ message: "Could not found the specific tool", error: true });
+      return next(error);
+    }
+    res.status(201).json({ message: "Deleted successfully", error: false });
   }
-  try {
-    await toolsModel.findByIdAndRemove(toolId);
-  } catch (error) {
-    res.json({ message: "Could not found the specific tool", error: true });
-    return next(error);
-  }
-  res.status(201).json({ message: "Deleted successfully", error: false });
 };
 const addPartsItem = async (req, res, next) => {
   const { partNo, description } = req.body;
