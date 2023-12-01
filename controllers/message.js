@@ -3,7 +3,13 @@ const asyncHandler = require("express-async-handler");
 const userModel = require("../models/userModel");
 const chatModel = require("../models/chat");
 const Pusher = require("pusher");
-
+const pusher = new Pusher({
+  appId: "1715435",
+  key: "07be80edc6aa2291c746",
+  secret: "932c773fe688e5a879d7",
+  cluster: "ap2",
+  useTLS: true,
+});
 const addMessage = asyncHandler(async (req, res, next) => {
   const { content, chatId, sender, moduleAttachments } = req.body;
   var newMessage = {
@@ -11,7 +17,6 @@ const addMessage = asyncHandler(async (req, res, next) => {
     content: content,
     chat: chatId,
   };
-  console.log("@@!!!", moduleAttachments);
   try {
     var message = await messageModel.create(newMessage);
     message = await message.populate("sender", "fullname email");
@@ -25,6 +30,9 @@ const addMessage = asyncHandler(async (req, res, next) => {
       $push: {
         moduleAttachments: moduleAttachments,
       },
+    });
+    pusher.trigger("chat-live", "add-message", {
+      message: message,
     });
     res.json({ messages: message, error: false });
   } catch (error) {
