@@ -21,65 +21,79 @@ const addTools = async (req, res, next) => {
     lastPurchasePrice,
     serial,
     toolNumber,
+    purchaseDate,
   } = req.body;
-  console.log("@@@@", req.files);
   var arr = [];
-  if (req.files[0] == undefined) {
-    const createToolsModel = new toolsModel({
-      category,
-      description,
-      techAssigned,
-      location,
-      subCategory,
-      employee,
-      project,
-      lastPurchasePrice,
-      serial,
-      toolNumber,
-      parts: [],
-      files: [],
-      history: [],
-    });
-    try {
-      await createToolsModel.save();
-    } catch (error) {
-      res.json({ message: "Error adding Tools", error: true });
-      return next(error);
+  var alltools;
+  try {
+    alltools = await toolsModel.find({ serial: serial });
+    console.log("check for serial no exist", alltools);
+    if (alltools.length) {
+      res.json({ message: "Duplicate Serial Number", error: true });
+    } else {
+      if (req.files[0] == undefined) {
+        const createToolsModel = new toolsModel({
+          category,
+          description,
+          techAssigned,
+          location,
+          subCategory,
+          employee,
+          project,
+          lastPurchasePrice,
+          purchaseDate,
+          serial,
+          toolNumber,
+          parts: [],
+          files: [],
+          history: [],
+        });
+        try {
+          await createToolsModel.save();
+        } catch (error) {
+          res.json({ message: "Error adding Tools", error: true });
+          return next(error);
+        }
+        res.json({ message: "Created Successfully", error: false });
+      } else {
+        try {
+          await uploadToS3(req.files[0])
+            .then((res) => {
+              arrReturn(res, arr);
+            })
+            .catch((err) => console.log(err));
+        } catch (error) {
+          res.json({ message: "Error Occured in S3 upload", error: true });
+        }
+        const createToolsModel = new toolsModel({
+          category,
+          description,
+          techAssigned,
+          location,
+          subCategory,
+          employee,
+          project,
+          lastPurchasePrice,
+          purchaseDate,
+          picture: { fileUrl: arr[0].fileUrl, filename: arr[0].filename },
+          serial,
+          toolNumber,
+          parts: [],
+          files: [],
+          history: [],
+        });
+        try {
+          await createToolsModel.save();
+        } catch (error) {
+          res.json({ message: "Error adding Tools", error: true });
+          return next(error);
+        }
+        res.json({ message: "Created Successfully", error: false });
+      }
     }
-    res.json({ message: "Created Successfully", error: false });
-  } else {
-    try {
-      await uploadToS3(req.files[0])
-        .then((res) => {
-          arrReturn(res, arr);
-        })
-        .catch((err) => console.log(err));
-    } catch (error) {
-      res.json({ message: "Error Occured in S3 upload", error: true });
-    }
-    const createToolsModel = new toolsModel({
-      category,
-      description,
-      techAssigned,
-      location,
-      subCategory,
-      employee,
-      project,
-      lastPurchasePrice,
-      picture: { fileUrl: arr[0].fileUrl, filename: arr[0].filename },
-      serial,
-      toolNumber,
-      parts: [],
-      files: [],
-      history: [],
-    });
-    try {
-      await createToolsModel.save();
-    } catch (error) {
-      res.json({ message: "Error adding Tools", error: true });
-      return next(error);
-    }
-    res.json({ message: "Created Successfully", error: false });
+  } catch (error) {
+    console.log(error);
+    res.json({ message: "Error in finding Tools" });
   }
 };
 const editTools = async (req, res, next) => {
@@ -93,6 +107,7 @@ const editTools = async (req, res, next) => {
       employee,
       project,
       lastPurchasePrice,
+      purchaseDate,
       pictureObj,
       serial,
       toolNumber,
@@ -113,11 +128,11 @@ const editTools = async (req, res, next) => {
     toolsToBeEdited.employee = employee;
     toolsToBeEdited.project = project;
     toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
-    if (pictureObj == undefined) {
-      return false;
-    } else {
-      toolsToBeEdited.picture = JSON.parse(pictureObj);
-    }
+    toolsToBeEdited.purchaseDate = purchaseDate;
+    toolsToBeEdited.picture =
+      pictureObj == "undefined" || pictureObj == undefined
+        ? {}
+        : JSON.parse(pictureObj);
     toolsToBeEdited.serial = serial;
     toolsToBeEdited.toolNumber = toolNumber;
     try {
@@ -137,6 +152,7 @@ const editTools = async (req, res, next) => {
       employee,
       project,
       lastPurchasePrice,
+      purchaseDate,
       picture,
       serial,
       toolNumber,
@@ -186,6 +202,7 @@ const editTools = async (req, res, next) => {
     toolsToBeEdited.employee = employee;
     toolsToBeEdited.project = project;
     toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
+    toolsToBeEdited.purchaseDate = purchaseDate;
     if (arr[0] == undefined || arr[0].length == 0) {
       return false;
     } else {

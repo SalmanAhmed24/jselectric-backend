@@ -9,11 +9,12 @@ const toolsSchema = new mongoose.Schema({
   employee: { type: String },
   project: { type: String },
   lastPurchasePrice: { type: String },
+  purchaseDate: { type: String },
   picture: {
     fileUrl: { type: String },
     filename: { type: String },
   },
-  serial: { type: String },
+  serial: { type: String, unique: true },
   toolNumber: { type: String },
   parts: [
     {
@@ -47,4 +48,5 @@ const toolsSchema = new mongoose.Schema({
     },
   ],
 });
+toolsSchema.plugin(validator);
 module.exports = mongoose.model("tools", toolsSchema);
