@@ -10,6 +10,7 @@ const toolsSchema = new mongoose.Schema({
   project: { type: String },
   lastPurchasePrice: { type: String },
   purchaseDate: { type: String },
+  warrantyExpDate: { type: String },
   picture: {
     fileUrl: { type: String },
     filename: { type: String },

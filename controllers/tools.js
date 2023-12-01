@@ -22,6 +22,7 @@ const addTools = async (req, res, next) => {
     serial,
     toolNumber,
     purchaseDate,
+    warrantyExpDate,
   } = req.body;
   var arr = [];
   var alltools;
@@ -44,6 +45,7 @@ const addTools = async (req, res, next) => {
           purchaseDate,
           serial,
           toolNumber,
+          warrantyExpDate,
           parts: [],
           files: [],
           history: [],
@@ -81,6 +83,7 @@ const addTools = async (req, res, next) => {
           parts: [],
           files: [],
           history: [],
+          warrantyExpDate,
         });
         try {
           await createToolsModel.save();
@@ -111,6 +114,7 @@ const editTools = async (req, res, next) => {
       pictureObj,
       serial,
       toolNumber,
+      warrantyExpDate,
     } = req.body;
     const { toolId } = req.params;
     let toolsToBeEdited;
@@ -129,6 +133,7 @@ const editTools = async (req, res, next) => {
     toolsToBeEdited.project = project;
     toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
     toolsToBeEdited.purchaseDate = purchaseDate;
+    toolsToBeEdited.warrantyExpDate = warrantyExpDate;
     toolsToBeEdited.picture =
       pictureObj == "undefined" || pictureObj == undefined
         ? {}
@@ -153,6 +158,7 @@ const editTools = async (req, res, next) => {
       project,
       lastPurchasePrice,
       purchaseDate,
+      warrantyExpDate,
       picture,
       serial,
       toolNumber,
@@ -203,6 +209,7 @@ const editTools = async (req, res, next) => {
     toolsToBeEdited.project = project;
     toolsToBeEdited.lastPurchasePrice = lastPurchasePrice;
     toolsToBeEdited.purchaseDate = purchaseDate;
+    toolsToBeEdited.warrantyExpDate = warrantyExpDate;
     if (arr[0] == undefined || arr[0].length == 0) {
       return false;
     } else {
