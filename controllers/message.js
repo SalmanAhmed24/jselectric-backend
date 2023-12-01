@@ -11,7 +11,7 @@ const pusher = new Pusher({
   useTLS: true,
 });
 const addMessage = asyncHandler(async (req, res, next) => {
-  const { content, chatId, sender, moduleAttachments } = req.body;
+  const { content, chatId, sender } = req.body;
   var newMessage = {
     sender: sender,
     content: content,
@@ -27,9 +27,6 @@ const addMessage = asyncHandler(async (req, res, next) => {
     });
     await chatModel.findByIdAndUpdate(chatId, {
       latestMessage: message,
-      $push: {
-        moduleAttachments: moduleAttachments,
-      },
     });
     pusher.trigger("chat-live", "add-message", {
       message: message,

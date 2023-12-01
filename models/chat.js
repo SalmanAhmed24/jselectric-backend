@@ -8,7 +8,6 @@ const chatSchema = new mongoose.Schema(
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
     latestMessage: { type: mongoose.Schema.Types.ObjectId, ref: "messages" },
     groupAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-    moduleAttachments: [{ type: Object }],
   },
   { timestamps: true }
 );
