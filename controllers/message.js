@@ -28,7 +28,7 @@ const addMessage = asyncHandler(async (req, res, next) => {
     await chatModel.findByIdAndUpdate(chatId, {
       latestMessage: message,
     });
-    pusher.trigger("chat-live", "add-message", {
+    await pusher.trigger("chat-live", "add-message", {
       message: message,
     });
     res.json({ messages: message, error: false });
