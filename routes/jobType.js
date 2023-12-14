@@ -11,7 +11,7 @@ const router = express.Router();
 // user controllers
 const jobTypeCon = require("../controllers/jobType.js");
 router.get("/", jobTypeCon.getJobType);
-router.post("/addUserType", jobTypeCon.addJobType);
+router.post("/addJobType", jobTypeCon.addJobType);
 router.patch("/:jobTypeId", jobTypeCon.editJobType);
 router.delete("/:jobTypeId", jobTypeCon.deleteJobType);
 module.exports = router;
