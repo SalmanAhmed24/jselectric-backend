@@ -9,6 +9,7 @@ app.use(cors());
 
 const usersRoutes = require("./routes/users");
 const usersTypeRoutes = require("./routes/userType");
+const jobTypeRoutes = require("./routes/jobType");
 const taxCodeRoutes = require("./routes/taxCode");
 const customerTypeRoutes = require("./routes/customerType");
 const materialLevelRoutes = require("./routes/materialLevel");
@@ -55,6 +56,7 @@ app.use("/api/salesPersonCode", salesPersonRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/message", messageRoutes);
+app.use("/api/jobType", jobTypeRoutes);
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `);
