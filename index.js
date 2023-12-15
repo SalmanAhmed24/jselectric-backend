@@ -9,7 +9,7 @@ app.use(cors());
 
 const usersRoutes = require("./routes/users");
 const usersTypeRoutes = require("./routes/userType");
-const phaseRoutes = require("./routes/phaseRoutes");
+const phaseRoutes = require("./routes/phase");
 const jobTypeRoutes = require("./routes/jobType");
 const jobRoutes = require("./routes/job");
 const taxCodeRoutes = require("./routes/taxCode");
