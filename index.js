@@ -28,6 +28,7 @@ const subtoolsCategoryRoutes = require("./routes/subtoolCategory");
 const clientRoutes = require("./routes/client");
 const chatRoutes = require("./routes/chat");
 const messageRoutes = require("./routes/message");
+const timeTrackRoutes = require("./routes/timeTrack");
 
 const url =
   "mongodb+srv://book-a-tutorDB:reactive_007@cluster0.2art5.mongodb.net/jselectric";
@@ -61,6 +62,8 @@ app.use("/api/message", messageRoutes);
 app.use("/api/jobType", jobTypeRoutes);
 app.use("/api/phase", phaseRoutes);
 app.use("/api/job", jobRoutes);
+app.use("/api/timeTrack", timeTrackRoutes);
+
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `);
