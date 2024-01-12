@@ -1,4 +1,14 @@
 const vehicleModel = require("../models/vehicle");
+const aws = require("aws-sdk");
+const dotenv = require("dotenv");
+const momentObj = require("moment");
+dotenv.config();
+const s3 = new aws.S3({
+  accessKeyId: `${process.env.ACCESS_KEY_AWS}`,
+  secretAccessKey: `${process.env.SECRET_KEY_AWS}`,
+  region: `${process.env.AWS_BUCKET_REGION}`,
+  Bucket: `${process.env.AWS_BUCKET_NAME}`,
+});
 const addVehicle = async (req, res, next) => {
   const {
     vehicleNo,
@@ -110,7 +120,195 @@ const deleteVehicle = async (req, res, next) => {
   }
   res.status(201).json({ message: "Deleted successfully", error: false });
 };
+const addFiles = async (req, res, next) => {
+  const { date, time, user, note } = req.body;
+  const { vehicleId } = req.params;
+  const files = req.files;
+  var arr = [];
+  try {
+    let i = 0;
+    let userToBeEdited;
+    while (i < files.length) {
+      await uploadToS3(files[i])
+        .then((res) => {
+          arrReturn(res, arr);
+        })
+        .catch((err) => console.log(err));
+      i++;
+    }
+    await vehicleModel.updateOne(
+      { _id: vehicleId },
+      {
+        $push: {
+          attachments: {
+            note: note,
+            date: date,
+            time: time,
+            user: user,
+            files: arr,
+          },
+        },
+      }
+    );
+  } catch (error) {
+    res.json({ message: "Could not find the user note", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Edited successfully", error: false });
+};
+const arrReturn = (item, arr) => {
+  arr.push(item);
+};
+const editFiles = async (req, res, next) => {
+  const { vehicleId } = req.params;
+  const { note, date, time, user, id, newFileFlag, editFlag, oldFiles } =
+    req.body;
+  const files = req.files;
+  let userToBeEdited;
+  if (newFileFlag === "true") {
+    console.log("here in true");
+    var arr = [];
+    const prevFileArr = JSON.parse(oldFiles);
+    try {
+      prevFileArr.forEach((item) => {
+        deleteAwsObj(item);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      let i = 0;
+      while (i < files.length) {
+        await uploadToS3(files[i])
+          .then((res) => {
+            arrReturn(res, arr);
+          })
+          .catch((err) => console.log(err));
+        i++;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      userToBeEdited = await vehicleModel.findById(vehicleId);
+    } catch (error) {
+      res.json({ message: "Could not find the attachments", error: true });
+      return next(error);
+    }
+    console.log("*****", arr);
+    userToBeEdited.attachments.forEach((i) => {
+      if (i._id.toString() == id) {
+        i.note = note;
+        i.date = date;
+        i.time = time;
+        i.user = user;
+        i.files = arr;
+      }
+    });
+    try {
+      await userToBeEdited.save();
+    } catch (error) {
+      res.json({ message: "Enable to edit notes", error: true });
+      return next(error);
+    }
+    res.status(201).json({ message: "Edited successfully", error: false });
+  } else {
+    const prevFileArr = JSON.parse(oldFiles);
+    console.log("@@@$$$ here", prevFileArr, newFileFlag);
+    try {
+      userToBeEdited = await vehicleModel.findById(vehicleId);
+    } catch (error) {
+      res.json({ message: "Could not find the attachments", error: true });
+      return next(error);
+    }
+    userToBeEdited.attachments.forEach((i) => {
+      if (i._id.toString() == id) {
+        i.note = note;
+        i.date = date;
+        i.time = time;
+        i.user = user;
+        i.files = prevFileArr;
+      }
+    });
+    try {
+      await userToBeEdited.save();
+    } catch (error) {
+      res.json({ message: "Enable to edit notes", error: true });
+      return next(error);
+    }
+    res.status(201).json({ message: "Edited successfully", error: false });
+  }
+};
+const deleteAwsObj = async (obj) => {
+  console.log("here in deleAWs", obj);
+
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: obj.filename,
+    };
+    s3.deleteObject(params, (err, data) => {
+      if (err) {
+        console.log("@@@@@!!!!!", err), reject(err);
+      }
+      return resolve(data);
+    });
+  });
+};
+const delFiles = async (req, res, next) => {
+  const { vehicleId, attachmentId } = req.params;
+  const { oldFiles } = req.body;
+  try {
+    oldFiles.forEach((item) => {
+      deleteAwsObj(item);
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ message: "Could not find the user note", error: true });
+    return next(error);
+  }
+  try {
+    await vehicleModel.updateOne(
+      { _id: vehicleId },
+      {
+        $pull: {
+          attachments: { _id: attachmentId },
+        },
+      }
+    );
+  } catch (error) {
+    res.json({ message: "Could not find the user note", error: true });
+    return next(error);
+  }
+  res.status(201).json({ message: "Deleted successfully", error: false });
+};
+
+const uploadToS3 = (file) => {
+  console.log("here in uploadS3", file);
+
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: `js-electric-app`,
+      Key: `${momentObj().format("hh:mm:ss")}-${file.originalname}`,
+      Body: file.buffer,
+    };
+
+    s3.upload(params, (err, data) => {
+      if (err) {
+        console.log("@@!!!!!!@#!#!@#!@#@#@!#!@# file", err), reject(err);
+      }
+      const dataObj = {
+        fileUrl: data.Location,
+        filename: data.Key,
+      };
+      return resolve(dataObj);
+    });
+  });
+};
 exports.addVehicle = addVehicle;
 exports.getVehicle = getVehicle;
 exports.editVehicle = editVehicle;
 exports.deleteVehicle = deleteVehicle;
+exports.addFiles = addFiles;
+exports.editFiles = editFiles;
+exports.delFiles = delFiles;

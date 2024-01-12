@@ -15,5 +15,19 @@ const vehicleSchema = new mongoose.Schema({
   cardNo: { type: String },
   trackingInstalled: { type: String },
   geoTab: { type: String },
+  attachments: [
+    {
+      files: [
+        {
+          fileUrl: { type: String },
+          filename: { type: String },
+        },
+      ],
+      user: { type: String },
+      date: { type: String },
+      time: { type: String },
+      note: { type: String },
+    },
+  ],
 });
 module.exports = mongoose.model("vehicles", vehicleSchema);
