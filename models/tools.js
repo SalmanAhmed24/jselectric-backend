@@ -15,7 +15,7 @@ const toolsSchema = new mongoose.Schema({
     fileUrl: { type: String },
     filename: { type: String },
   },
-  serial: { type: String, unique: true },
+  serial: { type: String },
   toolNumber: { type: String },
   parts: [
     {
