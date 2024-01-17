@@ -29,71 +29,71 @@ const addTools = async (req, res, next) => {
   try {
     alltools = await toolsModel.find({ serial: serial });
     console.log("check for serial no exist", alltools);
-    if (alltools.length) {
-      res.json({ message: "Duplicate Serial Number", error: true });
-    } else {
-      if (req.files[0] == undefined) {
-        const createToolsModel = new toolsModel({
-          category,
-          description,
-          techAssigned,
-          location,
-          subCategory,
-          employee,
-          project,
-          lastPurchasePrice,
-          purchaseDate,
-          serial,
-          toolNumber,
-          warrantyExpDate,
-          parts: [],
-          files: [],
-          history: [],
-        });
-        try {
-          await createToolsModel.save();
-        } catch (error) {
-          res.json({ message: "Error adding Tools", error: true });
-          return next(error);
-        }
-        res.json({ message: "Created Successfully", error: false });
-      } else {
-        try {
-          await uploadToS3(req.files[0])
-            .then((res) => {
-              arrReturn(res, arr);
-            })
-            .catch((err) => console.log(err));
-        } catch (error) {
-          res.json({ message: "Error Occured in S3 upload", error: true });
-        }
-        const createToolsModel = new toolsModel({
-          category,
-          description,
-          techAssigned,
-          location,
-          subCategory,
-          employee,
-          project,
-          lastPurchasePrice,
-          purchaseDate,
-          picture: { fileUrl: arr[0].fileUrl, filename: arr[0].filename },
-          serial,
-          toolNumber,
-          parts: [],
-          files: [],
-          history: [],
-          warrantyExpDate,
-        });
-        try {
-          await createToolsModel.save();
-        } catch (error) {
-          res.json({ message: "Error adding Tools", error: true });
-          return next(error);
-        }
-        res.json({ message: "Created Successfully", error: false });
+    // if (alltools.length) {
+    //   res.json({ message: "Duplicate Serial Number", error: true });
+    // } else {
+    if (req.files[0] == undefined) {
+      const createToolsModel = new toolsModel({
+        category,
+        description,
+        techAssigned,
+        location,
+        subCategory,
+        employee,
+        project,
+        lastPurchasePrice,
+        purchaseDate,
+        serial,
+        toolNumber,
+        warrantyExpDate,
+        parts: [],
+        files: [],
+        history: [],
+      });
+      try {
+        await createToolsModel.save();
+      } catch (error) {
+        res.json({ message: "Error adding Tools", error: true });
+        return next(error);
       }
+      res.json({ message: "Created Successfully", error: false });
+    } else {
+      try {
+        await uploadToS3(req.files[0])
+          .then((res) => {
+            arrReturn(res, arr);
+          })
+          .catch((err) => console.log(err));
+      } catch (error) {
+        res.json({ message: "Error Occured in S3 upload", error: true });
+      }
+      const createToolsModel = new toolsModel({
+        category,
+        description,
+        techAssigned,
+        location,
+        subCategory,
+        employee,
+        project,
+        lastPurchasePrice,
+        purchaseDate,
+        picture: { fileUrl: arr[0].fileUrl, filename: arr[0].filename },
+        serial,
+        toolNumber,
+        parts: [],
+        files: [],
+        history: [],
+        warrantyExpDate,
+      });
+      try {
+        await createToolsModel.save();
+      } catch (error) {
+        res.json({ message: "Error adding Tools", error: true });
+        return next(error);
+      }
+      res.json({ message: "Created Successfully", error: false });
     }
+    // }
   } catch (error) {
     console.log(error);
     res.json({ message: "Error in finding Tools" });
