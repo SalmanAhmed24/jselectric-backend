@@ -615,20 +615,35 @@ const addHistory = async (req, res, next) => {
   res.status(201).json({ message: "Edited successfully", error: false });
 };
 const getToolByNo = async (req, res, next) => {
-  const { toolNo } = req.params;
+  const { toolNo, searchValue } = req.params;
   let allTools;
-  try {
-    allTools = await toolsModel.find({
-      toolNumber: { $regex: toolNo, $options: "i" },
+  if (searchValue == "toolNo") {
+    try {
+      allTools = await toolsModel.find({
+        toolNumber: { $regex: toolNo, $options: "i" },
+      });
+    } catch (error) {
+      res.json({ message: "Error finding tools list", error: true });
+      return next(error);
+    }
+    res.json({
+      allTools: allTools.map((item) => item.toObject({ getters: true })),
+      error: false,
     });
-  } catch (error) {
-    res.json({ message: "Error finding tools list", error: true });
-    return next(error);
+  } else {
+    try {
+      allTools = await toolsModel.find({
+        serial: { $regex: toolNo, $options: "i" },
+      });
+    } catch (error) {
+      res.json({ message: "Error finding tools list", error: true });
+      return next(error);
+    }
+    res.json({
+      allTools: allTools.map((item) => item.toObject({ getters: true })),
+      error: false,
+    });
   }
-  res.json({
-    allTools: allTools.map((item) => item.toObject({ getters: true })),
-    error: false,
-  });
 };
 exports.addTools = addTools;
 exports.editTools = editTools;

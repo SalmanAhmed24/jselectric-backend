@@ -25,7 +25,7 @@ router.delete("/deletePartsItems/:toolId&&:partId", toolsCon.delPartsItem);
 router.patch("/addFiles/:toolId", toolsCon.addFiles);
 router.patch("/editFiles/:toolId", toolsCon.editFiles);
 router.patch("/delFiles/:toolId&&:attachmentId", toolsCon.delFiles);
-router.get("/:toolNo", toolsCon.getToolByNo);
+router.get("/:toolNo&&:searchValue", toolsCon.getToolByNo);
 router.post("/addHistory/", toolsCon.addHistory);
 
 module.exports = router;
