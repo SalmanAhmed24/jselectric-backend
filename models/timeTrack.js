@@ -9,8 +9,8 @@ const timeTrackSchema = new mongoose.Schema({
   endTime: { type: String },
   spectrum: { type: Boolean },
   lunch: { type: Boolean },
-  breakStartTime: { type: String },
-  breakEndTime: { type: String },
+  lunchStartTime: { type: String },
+  lunchEndTime: { type: String },
   user: { type: String },
 });
 module.exports = mongoose.model("timeTracks", timeTrackSchema);
