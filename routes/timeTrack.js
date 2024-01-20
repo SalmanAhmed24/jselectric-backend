@@ -11,6 +11,7 @@ const router = express.Router();
 // user controllers
 const timeTrackCon = require("../controllers/timeTrack.js");
 router.get("/", timeTrackCon.getTimeTrack);
+router.get("/:search", timeTrackCon.getByEmp);
 router.post("/addtimeTrack", timeTrackCon.addTimeTrack);
 router.patch("/:timeTrackId", timeTrackCon.editTimeTrack);
 router.delete("/:timeTrackId", timeTrackCon.deleteTimeTrack);

@@ -101,7 +101,24 @@ const deleteTimeTrack = async (req, res, next) => {
   }
   res.status(201).json({ message: "Deleted successfully", error: false });
 };
+const getByEmp = async (req, res, next) => {
+  const { search } = req.params;
+  let allTimeTrack;
+  try {
+    allTimeTrack = await timeTrackModel.find({
+      fullname: { $regex: search, $options: "i" },
+    });
+  } catch (error) {
+    res.json({ message: "Error finding time track list", error: true });
+    return next(error);
+  }
+  res.json({
+    timeTrack: allTimeTrack.map((item) => item.toObject({ getters: true })),
+    error: false,
+  });
+};
 exports.addTimeTrack = addTimeTrack;
 exports.getTimeTrack = getTimeTrack;
 exports.editTimeTrack = editTimeTrack;
 exports.deleteTimeTrack = deleteTimeTrack;
+exports.getByEmp = getByEmp;
