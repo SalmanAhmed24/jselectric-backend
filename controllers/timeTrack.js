@@ -106,7 +106,7 @@ const getByEmp = async (req, res, next) => {
   let allTimeTrack;
   try {
     allTimeTrack = await timeTrackModel.find({
-      fullname: { $regex: search, $options: "i" },
+      employee: { $regex: search, $options: "i" },
     });
   } catch (error) {
     res.json({ message: "Error finding time track list", error: true });
