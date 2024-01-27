@@ -14,8 +14,12 @@ const taskModuleSchema = new mongoose.Schema({
   ],
   attachments: [
     {
-      fileUrl: { type: String },
-      filename: { type: String },
+      files: [
+        {
+          fileUrl: { type: String },
+          filename: { type: String },
+        },
+      ],
       date: { type: String },
       user: { type: String },
     },
