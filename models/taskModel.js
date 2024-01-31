@@ -49,6 +49,7 @@ const taskModuleSchema = new mongoose.Schema({
       noteStatus: { type: String },
     },
   ],
-  selectedModule: { type: String },
+  selectedModule: [{ type: String }],
+  moduleArr: [{ type: Object }],
 });
 module.exports = mongoose.model("tasks", taskModuleSchema);

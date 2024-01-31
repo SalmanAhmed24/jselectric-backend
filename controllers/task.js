@@ -22,6 +22,7 @@ const addTask = async (req, res, next) => {
     taskStatus,
     assignedTo,
     selectedModule,
+    moduleArr,
   } = req.body;
   const createTaskModel = new taskModel({
     currentDate,
@@ -35,6 +36,7 @@ const addTask = async (req, res, next) => {
     subTasks: [],
     notes: [],
     selectedModule,
+    moduleArr,
   });
   try {
     await createTaskModel.save();
@@ -67,6 +69,7 @@ const editTask = async (req, res, next) => {
     taskStatus,
     assignedTo,
     selectedModule,
+    moduleArr,
     attachments,
     subTasks,
     notes,
@@ -86,7 +89,8 @@ const editTask = async (req, res, next) => {
   taskToBeEdited.description = description;
   taskToBeEdited.taskStatus = taskStatus;
   taskToBeEdited.assignedTo = assignedTo;
-  taskToBeEdited.selectedModulee = selectedModule;
+  taskToBeEdited.selectedModule = selectedModule;
+  taskToBeEdited.moduleArr = moduleArr;
   taskToBeEdited.attachments = attachments;
   taskToBeEdited.subTasks = subTasks;
   taskToBeEdited.notes = notes;
