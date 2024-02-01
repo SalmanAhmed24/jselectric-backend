@@ -563,9 +563,8 @@ const uploadToS3 = (file) => {
   });
 };
 const addHistory = async (req, res, next) => {
-  const { toolNumber, techAssigned, job, date, time, user } = req.body;
-  console.log("###", req.files);
-  console.log("@@@", toolNumber, techAssigned, job);
+  const { toolNumber, techAssigned, job, date, note, time, user } = req.body;
+
   var arr = [];
   let toolsToBeEdited;
   try {
@@ -604,6 +603,7 @@ const addHistory = async (req, res, next) => {
             date: date,
             time: time,
             user: user,
+            note: note,
           },
         },
       }
