@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const validator = require("mongoose-unique-validator");
 const timeTrackSchema = new mongoose.Schema({
   employee: { type: String },
-  job: { type: String },
+  jobDescription: { type: String },
+  notes: { type: String },
   phase: { type: String },
   date: { type: String },
   startTime: { type: String },

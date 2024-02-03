@@ -2,9 +2,10 @@ const timeTrackModel = require("../models/timeTrack");
 const addTimeTrack = async (req, res, next) => {
   const {
     employee,
-    job,
+    jobDescription,
     phase,
     date,
+    notes,
     startTime,
     endTime,
     lunch,
@@ -14,9 +15,10 @@ const addTimeTrack = async (req, res, next) => {
   } = req.body;
   const createTimeTrackModel = new timeTrackModel({
     employee,
-    job,
+    jobDescription,
     phase,
     date,
+    notes,
     startTime,
     endTime,
     spectrum,
@@ -48,13 +50,14 @@ const getTimeTrack = async (req, res, next) => {
 const editTimeTrack = async (req, res, next) => {
   const {
     employee,
-    job,
+    jobDescription,
     phase,
     date,
     startTime,
     endTime,
     spectrum,
     user,
+    notes,
     lunch,
     lunchTime,
   } = req.body;
@@ -67,9 +70,10 @@ const editTimeTrack = async (req, res, next) => {
     return next(error);
   }
   timeTrackToBeEdited.employee = employee;
-  timeTrackToBeEdited.job = job;
+  timeTrackToBeEdited.jobDescription = jobDescription;
   timeTrackToBeEdited.phase = phase;
   timeTrackToBeEdited.date = date;
+  timeTrackToBeEdited.notes = notes;
   timeTrackToBeEdited.startTime = startTime;
   timeTrackToBeEdited.endTime = endTime;
   timeTrackToBeEdited.spectrum = spectrum;
