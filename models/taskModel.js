@@ -7,6 +7,7 @@ const taskModuleSchema = new mongoose.Schema({
   dueDate: { type: String },
   description: { type: String },
   taskStatus: { type: String },
+  taskPriority: { type: String },
   assignedTo: [
     {
       fullname: { type: String },
