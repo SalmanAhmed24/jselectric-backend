@@ -37,6 +37,7 @@ const vehicleInspectionRoutes = require("./routes/vehicleInspection");
 const accidentReportRoutes = require("./routes/accidentReport");
 const taskRoutes = require("./routes/task");
 const tagoutRoutes = require("./routes/tagout");
+const taskPriorityRoutes = require("./routes/taskPriority");
 
 const url =
   "mongodb+srv://book-a-tutorDB:reactive_007@cluster0.2art5.mongodb.net/jselectric";
@@ -64,6 +65,7 @@ app.use("/api/deviceCategory", deviceCategoryRoutes);
 app.use("/api/taskCategory", taskCategoryRoutes);
 app.use("/api/notesCategory", notesCategoryRoutes);
 app.use("/api/taskStatus", taskStatusRoutes);
+app.use("/api/taskPriority", taskPriorityRoutes);
 app.use("/api/notesStatus", notesStatusRoutes);
 app.use("/api/taxCode", taxCodeRoutes);
 app.use("/api/subtoolCategory", subtoolsCategoryRoutes);
