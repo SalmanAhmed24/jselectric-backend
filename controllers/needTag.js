@@ -22,8 +22,6 @@ const addNeedTag = async (req, res, next) => {
   var arr = [];
   var allNeedTags;
   try {
-    allNeedTags = await needTagModel.find({ serial: serial });
-    console.log("check for serial no exist", allNeedTags);
     // if (alltools.length) {
     //   res.json({ message: "Duplicate Serial Number", error: true });
     // } else {
