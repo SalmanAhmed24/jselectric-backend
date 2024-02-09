@@ -38,6 +38,7 @@ const accidentReportRoutes = require("./routes/accidentReport");
 const taskRoutes = require("./routes/task");
 const tagoutRoutes = require("./routes/tagout");
 const taskPriorityRoutes = require("./routes/taskPriority");
+const needTagRoutes = require("./routes/needTag");
 
 const url =
   "mongodb+srv://book-a-tutorDB:reactive_007@cluster0.2art5.mongodb.net/jselectric";
@@ -81,6 +82,7 @@ app.use("/api/vehicleInspection", vehicleInspectionRoutes);
 app.use("/api/accidentReport", accidentReportRoutes);
 app.use("/api/task", taskRoutes);
 app.use("/api/tagout", tagoutRoutes);
+app.use("/api/needTag", needTagRoutes);
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
