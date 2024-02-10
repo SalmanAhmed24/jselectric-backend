@@ -20,13 +20,14 @@ const addNeedTag = async (req, res, next) => {
     serial,
   } = req.body;
   var arr = [];
+  console.log("@@@", req.files, req);
   var allNeedTags;
   try {
     // if (alltools.length) {
     //   res.json({ message: "Duplicate Serial Number", error: true });
     // } else {
     if (req.files[0] == undefined) {
-      const createNeedTagModel = new toolsModel({
+      const createNeedTagModel = new needTagModel({
         category,
         subCategory,
         description,
@@ -106,7 +107,7 @@ const editNeedTag = async (req, res, next) => {
       pictureObj == "undefined" || pictureObj == undefined
         ? {}
         : JSON.parse(pictureObj);
-    toolsToBeEdited.serial = serial;
+    needTagToBeEdited.serial = serial;
     try {
       await needTagToBeEdited.save();
     } catch (error) {
@@ -156,7 +157,7 @@ const editNeedTag = async (req, res, next) => {
     const { needTagId } = req.params;
     let needTagToBeEdited;
     try {
-      needTagToBeEdited = await toolsModel.findById(toolId);
+      needTagToBeEdited = await needTagModel.findById(needTagId);
     } catch (error) {
       res.json({ message: "Could not find the tools", error: true });
       return next(error);
