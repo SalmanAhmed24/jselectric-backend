@@ -49,18 +49,51 @@ const addTask = async (req, res, next) => {
   res.json({ message: "Created Successfully", error: false });
 };
 const getTask = async (req, res, next) => {
-  let allTasks;
-  try {
-    allTasks = await taskModel.find({});
-  } catch (error) {
-    res.json({ message: "Error finding Tasks list", error: true });
-    return next(error);
+  const { taskCategory, currentDate, description } = req.query;
+  if (
+    taskCategory !== undefined ||
+    currentDate !== undefined ||
+    description !== undefined
+  ) {
+    let allTasks;
+    try {
+      allTasks = await taskModel.find({
+        taskCategory: {
+          $regex: taskCategory !== undefined ? taskCategory : "",
+          $options: "i",
+        },
+        currentDate: {
+          $regex: currentDate !== undefined ? currentDate : "",
+          $options: "i",
+        },
+        description: {
+          $regex: description !== undefined ? description : "",
+          $options: "i",
+        },
+      });
+    } catch (error) {
+      res.json({ message: "Error finding Tasks list", error: true });
+      return next(error);
+    }
+    res.json({
+      allTasks: allTasks.map((item) => item.toObject({ getters: true })),
+      error: false,
+    });
+  } else {
+    let allTasks;
+    try {
+      allTasks = await taskModel.find({});
+    } catch (error) {
+      res.json({ message: "Error finding Tasks list", error: true });
+      return next(error);
+    }
+    res.json({
+      allTasks: allTasks.map((item) => item.toObject({ getters: true })),
+      error: false,
+    });
   }
-  res.json({
-    allTasks: allTasks.map((item) => item.toObject({ getters: true })),
-    error: false,
-  });
 };
+
 const editTask = async (req, res, next) => {
   const {
     currentDate,
