@@ -3,6 +3,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
+const dotenv = require("dotenv");
+dotenv.config();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
@@ -30,8 +32,6 @@ const notesCategoryRoutes = require("./routes/notesCategory");
 const salesPersonRoutes = require("./routes/salesPerson");
 const subtoolsCategoryRoutes = require("./routes/subtoolCategory");
 const clientRoutes = require("./routes/client");
-const chatRoutes = require("./routes/chat");
-const messageRoutes = require("./routes/message");
 const timeTrackRoutes = require("./routes/timeTrack");
 const vehicleInspectionRoutes = require("./routes/vehicleInspection");
 const accidentReportRoutes = require("./routes/accidentReport");
@@ -40,9 +40,10 @@ const tagoutRoutes = require("./routes/tagout");
 const taskPriorityRoutes = require("./routes/taskPriority");
 const needTagRoutes = require("./routes/needTag");
 const toolDamageRoutes = require("./routes/toolDamage");
+const chatRoutes = require("./routes/chat");
+const messageRoutes = require("./routes/message");
 
-const url =
-  "mongodb+srv://book-a-tutorDB:reactive_007@cluster0.2art5.mongodb.net/jselectric";
+const url = process.env.MONGO_DB_KEY;
 mongoose
   .connect(url)
   .then(() => {
@@ -72,9 +73,7 @@ app.use("/api/notesStatus", notesStatusRoutes);
 app.use("/api/taxCode", taxCodeRoutes);
 app.use("/api/subtoolCategory", subtoolsCategoryRoutes);
 app.use("/api/salesPersonCode", salesPersonRoutes);
-app.use("/api/chats", chatRoutes);
 app.use("/api/clients", clientRoutes);
-app.use("/api/message", messageRoutes);
 app.use("/api/jobType", jobTypeRoutes);
 app.use("/api/phase", phaseRoutes);
 app.use("/api/job", jobRoutes);
@@ -85,6 +84,8 @@ app.use("/api/task", taskRoutes);
 app.use("/api/tagout", tagoutRoutes);
 app.use("/api/needTag", needTagRoutes);
 app.use("/api/toolDamage", toolDamageRoutes);
+app.use("/api/chat", chatRoutes);
+app.use("/api/message", messageRoutes);
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {

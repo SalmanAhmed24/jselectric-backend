@@ -10,9 +10,8 @@ app.use(cors());
 const router = express.Router();
 // user controllers
 const chatCon = require("../controllers/chat");
-router.get("/:loggedInUserId", chatCon.getChat);
+router.get("/", chatCon.getChat);
+router.get("/:userId", chatCon.getChat);
 router.post("/addChat", chatCon.addChat);
-router.post("/groupChat", chatCon.createGroupChat);
-router.put("/groupRemoveUser", chatCon.removeFromGroup);
-router.put("/groupAddUser", chatCon.addToGroup);
+router.post("/seenBy/:chatId", chatCon.seenBy);
 module.exports = router;

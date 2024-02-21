@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
 const validator = require("mongoose-unique-validator");
-const userModel = require("./userModel");
-const messageSchema = new mongoose.Schema(
-  {
-    sender: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-    content: { type: String },
-    chat: { type: mongoose.Schema.Types.ObjectId, ref: "chats" },
+const messageSchema = new mongoose.Schema({
+  chat: { type: mongoose.Schema.Types.ObjectId, ref: "chats" },
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+  text: { type: String, default: "" },
+  createdAt: { type: Date, default: Date.now },
+  seenBy: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
+    default: [],
   },
-  { timestamps: true }
-);
+});
 module.exports = mongoose.model("messages", messageSchema);
