@@ -23,6 +23,9 @@ const addChat = async (req, res, next) => {
         );
       });
       Promise.all(updateAllMembers);
+      chat.members.map(async (member) => {
+        await pusherServer.trigger(member._id.toString(), "new-chat", chat);
+      });
     }
     res.json({ message: "Created Successfully", chat: chat, error: false });
   } catch (error) {
