@@ -1,6 +1,14 @@
 const chatModel = require("../models/chat");
 const userModel = require("../models/userModel");
 const messageModel = require("../models/message");
+const Pusher = require("pusher");
+const pusherServer = new Pusher({
+  appId: process.env.PUSHER_APP_ID,
+  key: process.env.PUSHER_APP_KEY,
+  secret: process.env.PUSHER_APP_SECERET,
+  cluster: "ap2",
+  useTLS: true,
+});
 const addChat = async (req, res, next) => {
   const { currentUserId, members, isGroup, name } = req.body;
   var query = isGroup
