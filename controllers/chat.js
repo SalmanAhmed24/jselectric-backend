@@ -17,7 +17,7 @@ const addChat = async (req, res, next) => {
   try {
     let chat = await chatModel.findOne(query);
     if (!chat) {
-      chat = new chatModel(
+      chat = await new chatModel(
         isGroup ? query : { members: [currentUserId, ...members] }
       );
       await chat.save();
@@ -65,38 +65,37 @@ const getChat = async (req, res, next) => {
     } catch (error) {
       res.json({ message: "Error finding chat", error: true });
     }
-  } else {
-    try {
-      const allChats = await chatModel
-        .find({ members: userId })
-        .sort({ lastMessage: -1 })
-        .populate({
-          path: "members",
-          model: userModel,
-        })
-        .populate({
-          path: "messages",
-          model: messageModel,
-          populate: {
-            path: "sender seenBy",
-            model: userModel,
-          },
-        })
-        .exec();
-      res.json({
-        chat: allChats.map((item) => item.toObject({ getters: true })),
-        error: false,
-      });
-    } catch (error) {
-      res.json({ message: "Error finding chat", error: true });
-    }
   }
+  // } else {
+  //   try {
+  //     const allChats = await chatModel
+  //       .find({ members: userId })
+  //       .sort({ lastMessage: -1 })
+  //       .populate({
+  //         path: "members",
+  //         model: userModel,
+  //       })
+  //       .populate({
+  //         path: "messages",
+  //         model: messageModel,
+  //         populate: {
+  //           path: "sender seenBy",
+  //           model: userModel,
+  //         },
+  //       })
+  //       .exec();
+  //     res.json({
+  //       chat: allChats.map((item) => item.toObject({ getters: true })),
+  //       error: false,
+  //     });
+  //   } catch (error) {
+  //     res.json({ message: "Error finding chat", error: true });
+  //   }
+  // }
 };
 const seenBy = async (req, res, next) => {
   const { chatId } = req.params;
   const { currentUserId } = req.body;
-  console.log("this is chatId", chatId);
-  console.log("this is currentUser", currentUserId);
   try {
     await messageModel
       .updateMany(

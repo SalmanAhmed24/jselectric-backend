@@ -33,11 +33,11 @@ const addMessage = async (req, res, next) => {
       .populate({
         path: "messages",
         model: messageModel,
-        populate: { path: "sender seenBy", model: userModel },
+        populate: { path: "sender seenBy", model: "users" },
       })
       .populate({
         path: "members",
-        model: userModel,
+        model: "users",
       })
       .exec();
     await pusherServer.trigger(chatId, "new-message", newMessage);
