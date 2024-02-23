@@ -12,6 +12,8 @@ const addTimeTrack = async (req, res, next) => {
     spectrum,
     user,
     lunchTime,
+    reimbursalFlag,
+    reimbursal,
   } = req.body;
   const createTimeTrackModel = new timeTrackModel({
     employee,
@@ -25,6 +27,8 @@ const addTimeTrack = async (req, res, next) => {
     user,
     lunch,
     lunchTime,
+    reimbursalFlag,
+    reimbursal,
   });
   try {
     await createTimeTrackModel.save();
@@ -60,6 +64,8 @@ const editTimeTrack = async (req, res, next) => {
     notes,
     lunch,
     lunchTime,
+    reimbursalFlag,
+    reimbursal,
   } = req.body;
   const { timeTrackId } = req.params;
   let timeTrackToBeEdited;
@@ -80,6 +86,9 @@ const editTimeTrack = async (req, res, next) => {
   timeTrackToBeEdited.user = user;
   timeTrackToBeEdited.lunch = lunch;
   timeTrackToBeEdited.lunchTime = lunchTime;
+  timeTrackToBeEdited.reimbursalFlag = reimbursalFlag;
+  timeTrackToBeEdited.reimbursal = reimbursal;
+
   try {
     await timeTrackToBeEdited.save();
   } catch (error) {

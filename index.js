@@ -11,6 +11,7 @@ app.use(cors());
 
 const usersRoutes = require("./routes/users");
 const usersTypeRoutes = require("./routes/userType");
+const reimbursalTypeRoutes = require("./routes/reimbursalType");
 const phaseRoutes = require("./routes/phase");
 const jobTypeRoutes = require("./routes/jobType");
 const jobRoutes = require("./routes/job");
@@ -55,6 +56,7 @@ mongoose
 
 app.use("/api/users", usersRoutes);
 app.use("/api/userType", usersTypeRoutes);
+app.use("/api/reimbursalType", reimbursalTypeRoutes);
 app.use("/api/customerType", customerTypeRoutes);
 app.use("/api/materialLevel", materialLevelRoutes);
 app.use("/api/laborLevel", laborLevelRoutes);

@@ -12,5 +12,13 @@ const timeTrackSchema = new mongoose.Schema({
   lunch: { type: Boolean },
   lunchTime: { type: String },
   user: { type: String },
+  reimbursalFlag: { type: String },
+  reimbursal: [
+    {
+      reimbursalType: { type: String },
+      amount: { type: String },
+      note: { type: String },
+    },
+  ],
 });
 module.exports = mongoose.model("timeTracks", timeTrackSchema);
