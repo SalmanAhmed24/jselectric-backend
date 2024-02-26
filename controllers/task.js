@@ -12,6 +12,7 @@ const s3 = new aws.S3({
   region: `${process.env.AWS_BUCKET_REGION}`,
   Bucket: `${process.env.AWS_BUCKET_NAME}`,
 });
+
 const addTask = async (req, res, next) => {
   const {
     currentDate,
