@@ -563,7 +563,8 @@ const uploadToS3 = (file) => {
   });
 };
 const addHistory = async (req, res, next) => {
-  const { toolNumber, techAssigned, job, date, note, time, user } = req.body;
+  const { toolNumber, techAssigned, job, date, note, time, user, checkedOut } =
+    req.body;
 
   var arr = [];
   let toolsToBeEdited;
@@ -582,7 +583,6 @@ const addHistory = async (req, res, next) => {
     res.json({ message: "Could not find the attachments", error: true });
     return next(error);
   }
-  console.log("$$$$$", toolsToBeEdited);
   toolsToBeEdited.techAssigned = techAssigned;
   try {
     await toolsToBeEdited.save();
@@ -604,6 +604,7 @@ const addHistory = async (req, res, next) => {
             time: time,
             user: user,
             note: note,
+            checkedOut: checkedOut,
           },
         },
       }

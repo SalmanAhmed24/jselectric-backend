@@ -47,6 +47,7 @@ const toolsSchema = new mongoose.Schema({
       time: { type: String },
       user: { type: String },
       note: { type: String },
+      checkedOut: { type: String },
     },
   ],
 });
