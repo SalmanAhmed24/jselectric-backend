@@ -43,6 +43,7 @@ const needTagRoutes = require("./routes/needTag");
 const toolDamageRoutes = require("./routes/toolDamage");
 const chatRoutes = require("./routes/chat");
 const messageRoutes = require("./routes/message");
+const checkedOutRoutes = require("./routes/checkedOut");
 
 const url = process.env.MONGO_DB_KEY;
 mongoose
@@ -88,6 +89,7 @@ app.use("/api/needTag", needTagRoutes);
 app.use("/api/toolDamage", toolDamageRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
+app.use("/api/checkedOut", checkedOutRoutes);
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {

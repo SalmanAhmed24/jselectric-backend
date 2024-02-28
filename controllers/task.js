@@ -484,6 +484,32 @@ const uploadToS3 = (file) => {
     });
   });
 };
+const sendEmail = (req, res) => {
+  console.log("@@@@@@", req.body); // Your form data
+  var nodemailer = require("nodemailer");
+  var transporter = nodemailer.createTransport({
+    host: "server1.meetshmhosting.com",
+    port: 465,
+    auth: { user: "test@jselectric-app.com", pass: "reactive_007" },
+    secure: true,
+  });
+  var mailOptions = {
+    from: "test@jselectric-app.com",
+    to: `${req.body.email}`,
+    subject: "Get Started as Individual",
+    html: `just for testing`,
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+      res.status(200).json({ data: "success" });
+    }
+  });
+};
+exports.sendEmail = sendEmail;
 exports.addTask = addTask;
 exports.getTask = getTask;
 exports.editTask = editTask;
