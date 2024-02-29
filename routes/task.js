@@ -22,7 +22,6 @@ router.use(multer().array("files", 12));
 const taskCon = require("../controllers/task.js");
 router.get("/", taskCon.getTask);
 router.post("/addTask", taskCon.addTask);
-router.post("/sendEmail", taskCon.sendEmail);
 router.patch("/:taskId", taskCon.editTask);
 router.delete("/:taskId", taskCon.deleteTask);
 router.put("/addSubTask/:taskId", taskCon.addSubTask);
