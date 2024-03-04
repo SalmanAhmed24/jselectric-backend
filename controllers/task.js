@@ -40,6 +40,7 @@ const addTask = async (req, res, next) => {
     selectedModule,
     taskPriority,
     moduleArr,
+    lastUpdated: new Date(),
   });
   try {
     await createTaskModel.save();
@@ -132,6 +133,7 @@ const editTask = async (req, res, next) => {
   taskToBeEdited.subTasks = subTasks;
   taskToBeEdited.notes = notes;
   taskToBeEdited.taskPriority = taskPriority;
+  taskToBeEdited.lastUpdated = new Date();
   try {
     await taskToBeEdited.save();
   } catch (error) {
@@ -161,7 +163,6 @@ const addSubTask = async (req, res, next) => {
     assignedTo,
   } = req.body;
   const { taskId } = req.params;
-
   try {
     await taskModel.updateOne(
       { _id: taskId },
@@ -177,6 +178,7 @@ const addSubTask = async (req, res, next) => {
             assignedTo,
           },
         },
+        $set: { lastUpdated: new Date() },
       }
     );
   } catch (error) {
@@ -202,6 +204,7 @@ const editSubTask = async (req, res, next) => {
     res.json({ message: "Could not find the task", error: true });
     return next(error);
   }
+  taskToBeEdited.lastUpdated = new Date();
   taskToBeEdited.subTasks.forEach((i) => {
     if (i.id == subTaskId) {
       i.currentDate = currentDate;
@@ -257,6 +260,7 @@ const addTaskNotes = async (req, res, next) => {
             noteStatus,
           },
         },
+        $set: { lastUpdated: new Date() },
       }
     );
   } catch (error) {
@@ -275,6 +279,7 @@ const editTaskNotes = async (req, res, next) => {
     res.json({ message: "Could not find the task", error: true });
     return next(error);
   }
+  taskToBeEdited.lastUpdated = new Date();
   taskToBeEdited.notes.forEach((i) => {
     if (i.id == noteId) {
       i.currentDate = currentDate;

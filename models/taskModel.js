@@ -52,5 +52,6 @@ const taskModuleSchema = new mongoose.Schema({
   ],
   selectedModule: [{ type: String }],
   moduleArr: [{ type: Object }],
+  lastUpdated: { type: String },
 });
 module.exports = mongoose.model("tasks", taskModuleSchema);
