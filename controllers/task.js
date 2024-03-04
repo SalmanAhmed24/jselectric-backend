@@ -25,6 +25,7 @@ const addTask = async (req, res, next) => {
     selectedModule,
     taskPriority,
     moduleArr,
+    updated,
   } = req.body;
   const createTaskModel = new taskModel({
     currentDate,
@@ -41,6 +42,7 @@ const addTask = async (req, res, next) => {
     taskPriority,
     moduleArr,
     lastUpdated: new Date(),
+    updated,
   });
   try {
     await createTaskModel.save();
@@ -111,6 +113,7 @@ const editTask = async (req, res, next) => {
     subTasks,
     taskPriority,
     notes,
+    updated,
   } = req.body;
   const { taskId } = req.params;
   let taskToBeEdited;
@@ -134,6 +137,7 @@ const editTask = async (req, res, next) => {
   taskToBeEdited.notes = notes;
   taskToBeEdited.taskPriority = taskPriority;
   taskToBeEdited.lastUpdated = new Date();
+  taskToBeEdited.updated = updated;
   try {
     await taskToBeEdited.save();
   } catch (error) {
@@ -161,6 +165,7 @@ const addSubTask = async (req, res, next) => {
     description,
     taskStatus,
     assignedTo,
+    updated,
   } = req.body;
   const { taskId } = req.params;
   try {
@@ -179,6 +184,7 @@ const addSubTask = async (req, res, next) => {
           },
         },
         $set: { lastUpdated: new Date() },
+        $set: { updated: updated },
       }
     );
   } catch (error) {
@@ -196,6 +202,7 @@ const editSubTask = async (req, res, next) => {
     description,
     taskStatus,
     assignedTo,
+    updated,
   } = req.body;
   const { taskId, subTaskId } = req.params;
   try {
@@ -205,6 +212,7 @@ const editSubTask = async (req, res, next) => {
     return next(error);
   }
   taskToBeEdited.lastUpdated = new Date();
+  taskToBeEdited.updated = updated;
   taskToBeEdited.subTasks.forEach((i) => {
     if (i.id == subTaskId) {
       i.currentDate = currentDate;
@@ -261,6 +269,7 @@ const addTaskNotes = async (req, res, next) => {
           },
         },
         $set: { lastUpdated: new Date() },
+        $set: { updated: updated },
       }
     );
   } catch (error) {
@@ -270,8 +279,15 @@ const addTaskNotes = async (req, res, next) => {
   res.status(201).json({ message: "Added successfully", error: false });
 };
 const editTaskNotes = async (req, res, next) => {
-  const { currentDate, user, noteCategory, dueDate, description, noteStatus } =
-    req.body;
+  const {
+    currentDate,
+    user,
+    noteCategory,
+    dueDate,
+    description,
+    noteStatus,
+    updated,
+  } = req.body;
   const { taskId, noteId } = req.params;
   try {
     taskToBeEdited = await taskModel.findById(taskId);
@@ -280,6 +296,7 @@ const editTaskNotes = async (req, res, next) => {
     return next(error);
   }
   taskToBeEdited.lastUpdated = new Date();
+  taskToBeEdited.updated = updated;
   taskToBeEdited.notes.forEach((i) => {
     if (i.id == noteId) {
       i.currentDate = currentDate;
