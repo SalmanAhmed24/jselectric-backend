@@ -143,12 +143,10 @@ const setTaskNotification = async (req, res, next) => {
     });
     return next(error);
   }
-  res
-    .status(201)
-    .json({
-      message: "Task Notification status updated successfully",
-      error: false,
-    });
+  res.status(201).json({
+    message: "Task Notification status updated successfully",
+    error: false,
+  });
 };
 const deleteUser = async (req, res, next) => {
   const { userId } = req.params;
@@ -186,6 +184,7 @@ const loginUser = async (req, res, next) => {
         id: userInfo.toObject({ getters: true }).id,
         userType: userInfo.userType,
         email: userInfo.email,
+        taskNotification: userInfo.taskNotification,
       },
       error: false,
     });
