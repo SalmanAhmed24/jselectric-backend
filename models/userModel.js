@@ -61,6 +61,7 @@ const userSchema = new mongoose.Schema({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "chats" }],
     default: [],
   },
+  taskNotification: { type: Boolean },
 });
 userSchema.plugin(validator);
 module.exports = mongoose.model("users", userSchema);

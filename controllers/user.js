@@ -123,6 +123,33 @@ const editUser = async (req, res, next) => {
   }
   res.status(201).json({ message: "Edited successfully", error: false });
 };
+const setTaskNotification = async (req, res, next) => {
+  const { taskNotification } = req.body;
+  const { userId } = req.params;
+  let userToBeEdited;
+  try {
+    userToBeEdited = await userModel.findById(userId);
+  } catch (error) {
+    res.json({ message: "Could not find the user", error: true });
+    return next(error);
+  }
+  userToBeEdited.taskNotification = taskNotification;
+  try {
+    await userToBeEdited.save();
+  } catch (error) {
+    res.json({
+      message: "Enable to Change Task Notification Status",
+      error: true,
+    });
+    return next(error);
+  }
+  res
+    .status(201)
+    .json({
+      message: "Task Notification status updated successfully",
+      error: false,
+    });
+};
 const deleteUser = async (req, res, next) => {
   const { userId } = req.params;
   try {
@@ -590,3 +617,4 @@ exports.getUserByName = getUserByName;
 exports.addSchedule = addSchedule;
 exports.delSchedule = delSchedule;
 exports.editSchedule = editSchedule;
+exports.setTaskNotification = setTaskNotification;

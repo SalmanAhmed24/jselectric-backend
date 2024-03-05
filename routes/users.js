@@ -28,6 +28,7 @@ router.patch("/addBadges/:userId", userCon.addBadges);
 router.patch("/editBadges/:userId", userCon.editBadges);
 router.patch("/addNotes/:userId", userCon.addNotes);
 router.patch("/editNotes/:userId", userCon.editNotes);
+router.patch("/setTaskNotification/:userId", userCon.setTaskNotification);
 router.delete("/delNotes/:userId&&:noteId", userCon.delNotes);
 router.patch("/addFiles/:userId", userCon.addFiles);
 router.patch("/editFiles/:userId", userCon.editFiles);
