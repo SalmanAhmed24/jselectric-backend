@@ -47,6 +47,7 @@ const toolDamageRoutes = require("./routes/toolDamage");
 const chatRoutes = require("./routes/chat");
 const messageRoutes = require("./routes/message");
 const checkedOutRoutes = require("./routes/checkedOut");
+const jobNumberRoutes = require("./routes/jobNumber");
 
 const url = process.env.MONGO_DB_KEY;
 mongoose
@@ -96,6 +97,7 @@ app.use("/api/toolDamage", toolDamageRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 app.use("/api/checkedOut", checkedOutRoutes);
+app.use("/api/jobNumber", jobNumberRoutes);
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
