@@ -39,17 +39,41 @@ const addJobNumber = async (req, res, next) => {
   res.json({ message: "Created Successfully", error: false });
 };
 const getJobNumber = async (req, res, next) => {
-  let jobNumbers;
-  try {
-    jobNumbers = await jobNumberModel.find({});
-  } catch (error) {
-    res.json({ message: "Error finding Job Number list", error: true });
-    return next(error);
+  const { jobTag, jobPM } = req.query;
+  if (jobTag !== undefined || jobPM !== undefined) {
+    let jobNumbers;
+    try {
+      jobNumbers = await jobNumberModel.find({
+        jobTag: {
+          $regex: jobTag !== undefined ? jobTag : "",
+          $options: "i",
+        },
+        jobPM: {
+          $regex: jobPM !== undefined ? jobPM : "",
+          $options: "i",
+        },
+      });
+    } catch (error) {
+      res.json({ message: "Error finding Tasks list", error: true });
+      return next(error);
+    }
+    res.json({
+      jobNumbers: jobNumbers.map((item) => item.toObject({ getters: true })),
+      error: false,
+    });
+  } else {
+    let jobNumbers;
+    try {
+      jobNumbers = await jobNumberModel.find({});
+    } catch (error) {
+      res.json({ message: "Error finding Job Number list", error: true });
+      return next(error);
+    }
+    res.json({
+      jobNumbers: jobNumbers.map((item) => item.toObject({ getters: true })),
+      error: false,
+    });
   }
-  res.json({
-    jobNumbers: jobNumbers.map((item) => item.toObject({ getters: true })),
-    error: false,
-  });
 };
 const editJobNumber = async (req, res, next) => {
   const {
