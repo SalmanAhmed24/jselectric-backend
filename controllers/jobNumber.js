@@ -39,7 +39,7 @@ const addJobNumber = async (req, res, next) => {
   res.json({ message: "Created Successfully", error: false });
 };
 const getJobNumber = async (req, res, next) => {
-  const { jobTag, jobPM } = req.query;
+  const { jobTag, jobPM, client } = req.query;
   if (jobTag !== undefined || jobPM !== undefined) {
     let jobNumbers;
     try {
@@ -50,6 +50,10 @@ const getJobNumber = async (req, res, next) => {
         },
         jobPM: {
           $regex: jobPM !== undefined ? jobPM : "",
+          $options: "i",
+        },
+        client: {
+          $regex: client !== undefined ? client : "",
           $options: "i",
         },
       });
