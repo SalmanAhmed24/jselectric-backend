@@ -250,8 +250,15 @@ const delSubTasks = async (req, res, next) => {
   res.status(201).json({ message: "Deleted successfully", error: false });
 };
 const addTaskNotes = async (req, res, next) => {
-  const { currentDate, user, noteCategory, dueDate, description, noteStatus } =
-    req.body;
+  const {
+    currentDate,
+    user,
+    noteCategory,
+    dueDate,
+    description,
+    noteStatus,
+    updated,
+  } = req.body;
   const { taskId } = req.params;
 
   try {
