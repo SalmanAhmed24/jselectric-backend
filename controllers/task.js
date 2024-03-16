@@ -168,8 +168,17 @@ const addSubTask = async (req, res, next) => {
     updated,
   } = req.body;
   const { taskId } = req.params;
+  let taskToBeEdited;
   try {
-    await taskModel.updateOne(
+    taskToBeEdited = await taskModel.findById(taskId);
+  } catch (error) {
+    res.json({ message: "Could not find the task", error: true });
+    return next(error);
+  }
+  taskToBeEdited.lastUpdated = new Date();
+  taskToBeEdited.updated = updated;
+  try {
+    await taskModel.findOneAndUpdate(
       { _id: taskId },
       {
         $push: {
@@ -183,17 +192,22 @@ const addSubTask = async (req, res, next) => {
             assignedTo,
           },
         },
-        $set: { lastUpdated: new Date() },
-        $set: { updated: updated },
       }
     );
   } catch (error) {
     res.json({ message: "Could not add the sub task", error: true });
     return next(error);
   }
+  try {
+    await taskToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit Sub Task", error: true });
+    return next(error);
+  }
   res.status(201).json({ message: "Added successfully", error: false });
 };
 const editSubTask = async (req, res, next) => {
+  let taskToBeEdited;
   const {
     currentDate,
     user,
@@ -260,7 +274,15 @@ const addTaskNotes = async (req, res, next) => {
     updated,
   } = req.body;
   const { taskId } = req.params;
-
+  let taskToBeEdited;
+  try {
+    taskToBeEdited = await taskModel.findById(taskId);
+  } catch (error) {
+    res.json({ message: "Could not find the task", error: true });
+    return next(error);
+  }
+  taskToBeEdited.lastUpdated = new Date();
+  taskToBeEdited.updated = updated;
   try {
     await taskModel.updateOne(
       { _id: taskId },
@@ -275,12 +297,16 @@ const addTaskNotes = async (req, res, next) => {
             noteStatus,
           },
         },
-        $set: { lastUpdated: new Date() },
-        $set: { updated: updated },
       }
     );
   } catch (error) {
     res.json({ message: "Could not add the Notes", error: true });
+    return next(error);
+  }
+  try {
+    await taskToBeEdited.save();
+  } catch (error) {
+    res.json({ message: "Enable to edit Sub Task", error: true });
     return next(error);
   }
   res.status(201).json({ message: "Added successfully", error: false });
