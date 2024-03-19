@@ -1,4 +1,5 @@
 const timeTrackModel = require("../models/timeTrack");
+const moment = require("moment");
 const addTimeTrack = async (req, res, next) => {
   const {
     employee,
@@ -40,17 +41,37 @@ const addTimeTrack = async (req, res, next) => {
   res.json({ message: "Created Successfully", error: false });
 };
 const getTimeTrack = async (req, res, next) => {
-  let timeTracks;
-  try {
-    timeTracks = await timeTrackModel.find({});
-  } catch (error) {
-    res.json({ message: "Error finding time Track", error: true });
-    return next(error);
+  const { startDate, endDate } = req.query;
+  if (startDate !== "" && endDate !== "") {
+    let timeTracks;
+    try {
+      timeTracks = await timeTrackModel.find({
+        date: {
+          $gte: moment(startDate).format(),
+          $lte: moment(endDate).format(),
+        },
+      });
+    } catch (error) {
+      res.json({ message: "Error finding time Track", error: true });
+      return next(error);
+    }
+    res.json({
+      timeTracks: timeTracks.map((item) => item.toObject({ getters: true })),
+      error: false,
+    });
+  } else {
+    let timeTracks;
+    try {
+      timeTracks = await timeTrackModel.find({});
+    } catch (error) {
+      res.json({ message: "Error finding time Track", error: true });
+      return next(error);
+    }
+    res.json({
+      timeTracks: timeTracks.map((item) => item.toObject({ getters: true })),
+      error: false,
+    });
   }
-  res.json({
-    timeTracks: timeTracks.map((item) => item.toObject({ getters: true })),
-    error: false,
-  });
 };
 const editTimeTrack = async (req, res, next) => {
   const {
