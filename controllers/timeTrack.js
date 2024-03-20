@@ -43,9 +43,9 @@ const addTimeTrack = async (req, res, next) => {
 const getTimeTrack = async (req, res, next) => {
   const { startDate, endDate } = req.query;
   if (
-    startDate !== "" &&
-    endDate !== "" &&
-    startDate !== undefined &&
+    startDate !== "" ||
+    endDate !== "" ||
+    startDate !== undefined ||
     endDate !== undefined
   ) {
     let timeTracks;
