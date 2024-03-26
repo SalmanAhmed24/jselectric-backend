@@ -41,10 +41,13 @@ const addMessage = async (req, res, next) => {
       })
       .exec();
     await pusherServer.trigger(chatId, "new-message", newMessage);
+    console.log("this is new message", newMessage);
+    console.log("this is updatedChat", updatedChat);
     const lastMessage = updatedChat.messages[updatedChat.messages.length - 1];
+    console.log("this is lastMessage", lastMessage);
     updatedChat.members.forEach(async (member) => {
       try {
-        await pusherServer.trigger(member._id.toString(), "update-chat", {
+        await pusherServer.trigger(`${member._id}`, "update-chat", {
           id: chatId,
           messages: [lastMessage],
         });
