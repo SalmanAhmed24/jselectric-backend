@@ -11,6 +11,7 @@ const taskModuleSchema = new mongoose.Schema({
   assignedTo: [
     {
       fullname: { type: String },
+      email: { type: String },
     },
   ],
   attachments: [

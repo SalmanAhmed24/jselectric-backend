@@ -8,7 +8,10 @@ dotenv.config();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-
+const { Resend } = require("resend");
+const instanceResend = new Resend(process.env.RESEND_API_KEY);
+const taskModel = require("./models/taskModel");
+const userModel = require("./models/userModel");
 const usersRoutes = require("./routes/users");
 const usersTypeRoutes = require("./routes/userType");
 const reimbursalTypeRoutes = require("./routes/reimbursalType");
@@ -98,7 +101,60 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 app.use("/api/checkedOut", checkedOutRoutes);
 app.use("/api/jobNumber", jobNumberRoutes);
+var cron = require("node-cron");
 
+// cron.schedule("* * * * *", async () => {
+//   console.log("this calls");
+//   let allTasks;
+//   let allUsers;
+//   try {
+//     allTasks = await taskModel.find({});
+//   } catch (error) {
+//     console.log(error);
+//   }
+//   try {
+//     allUsers = await userModel.find({});
+//   } catch (error) {
+//     console.log(error);
+//   }
+//   const allUsersWithassignedTask = allTasks.map((i) => {
+//     return {
+//       id: i._id,
+//       assignedTo: i.assignedTo.map((inner) => inner.fullname),
+//     };
+//   });
+//   var alteredUsersWithTasks = [];
+//   allUsers.forEach((el) => {
+//     allUsersWithassignedTask.forEach((innEl) => {
+//       innEl.assignedTo.forEach((assignee) => {
+//         if (el.fullname == assignee) {
+//           alteredUsersWithTasks = [
+//             ...alteredUsersWithTasks,
+//             { taskId: innEl.id, email: el.email, fullname: assignee },
+//           ];
+//         }
+//       });
+//     });
+//   });
+//   console.log("these are all Tasks", alteredUsersWithTasks);
+//   // console.log("these are all Users", allUsers);
+//   // try {
+//   //   const { data, error } = await instanceResend.emails.send({
+//   //     from: "JsElectric <jselectric@resend.dev>",
+//   //     to: ["salman.ahmed.abbasi.24@gmail.com", "kbaumhover@jselectric.com"],
+//   //     subject: "Schedule Emails Test from jsElectric",
+//   //     html: `<div>
+//   //     <p>This is a test for sending schedule emails</p>
+//   //     </div>`,
+//   //   });
+//   //   if (error) {
+//   //     console.log("error", error);
+//   //   }
+//   //   console.log("called success", data);
+//   // } catch (error) {
+//   //   console.log("error", error);
+//   // }
+// });
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `);
